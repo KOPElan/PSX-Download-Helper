@@ -1,0 +1,373 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="alertLabel1.Text" xml:space="preserve">
+    <value>無線AP設置，如果你有無線網卡，並且支援開啟AP模式的話，可以從這裡快速開啟，在開啟前請先使用管理員模式運行本軟體，再次進入AP設置介面。</value>
+  </data>
+  <data name="alert_set.Text" xml:space="preserve">
+    <value>設置已更改！</value>
+  </data>
+  <data name="btn_CheckCdn.Text" xml:space="preserve">
+    <value>重新檢查主機狀態</value>
+  </data>
+  <data name="btn_checkupdate.Text" xml:space="preserve">
+    <value>檢查更新</value>
+  </data>
+  <data name="btn_delall.Text" xml:space="preserve">
+    <value>清空歷史紀錄</value>
+  </data>
+  <data name="btn_editcdn.Text" xml:space="preserve">
+    <value>編輯主機列表</value>
+  </data>
+  <data name="Btn_ExportCdn.Text" xml:space="preserve">
+    <value>導出</value>
+  </data>
+  <data name="btn_lx1.Text" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="btn_lx2.Text" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="btn_lxhelp.Text" xml:space="preserve">
+    <value>離綫使用幫助</value>
+  </data>
+  <data name="btn_savesetting.Text" xml:space="preserve">
+    <value>應用當前設置</value>
+  </data>
+  <data name="btn_showalllog.Text" xml:space="preserve">
+    <value>載入歷史記錄</value>
+  </data>
+  <data name="cdnerror" xml:space="preserve">
+    <value>檢查CDN主機時出錯，</value>
+  </data>
+  <data name="cdnfileerror" xml:space="preserve">
+    <value>檢查CDN主機時出現問題，請檢查配置文件是否完整！</value>
+  </data>
+  <data name="checkupdatenow" xml:space="preserve">
+    <value>正在檢查更新……</value>
+  </data>
+  <data name="ckb_autoupdate.Text" xml:space="preserve">
+    <value>自動檢查更新</value>
+  </data>
+  <data name="Ckb_HideFrm.Text" xml:space="preserve">
+    <value>最小化到托盤</value>
+  </data>
+  <data name="ckb_lx1.Text" xml:space="preserve">
+    <value>使用這組配置</value>
+  </data>
+  <data name="ckb_lx2.Text" xml:space="preserve">
+    <value>使用這組配置</value>
+  </data>
+  <data name="ckb_mohu.Text" xml:space="preserve">
+    <value>忽略右匹配規則</value>
+  </data>
+  <data name="ckb_usecustome.Text" xml:space="preserve">
+    <value>啓用自定義解析</value>
+  </data>
+  <data name="groupBox1.Text" xml:space="preserve">
+    <value>配置一</value>
+  </data>
+  <data name="groupBox2.Text" xml:space="preserve">
+    <value>配置二</value>
+  </data>
+  <data name="historydelalert" xml:space="preserve">
+    <value>此操作將會刪除DataFiles下的DataHistory.xml文件，所有以前的記錄都會丟掉，是否要繼續？</value>
+  </data>
+  <data name="historydelerror" xml:space="preserve">
+    <value>清空記錄出錯，錯誤信息：</value>
+  </data>
+  <data name="historydelsuccess" xml:space="preserve">
+    <value>清空記錄完畢，請重新啟動本軟件！</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>*為任意匹配，多個匹配詞用‘|’隔開，如*.pkg*|*.exe*表示同時匹配包含.pkg和.exe的連接</value>
+  </data>
+  <data name="label10.Text" xml:space="preserve">
+    <value>Cookie：</value>
+  </data>
+  <data name="label11.Text" xml:space="preserve">
+    <value>主機：</value>
+  </data>
+  <data name="label12.Text" xml:space="preserve">
+    <value>標注：</value>
+  </data>
+  <data name="label13.Text" xml:space="preserve">
+    <value>標注：</value>
+  </data>
+  <data name="label14.Text" xml:space="preserve">
+    <value>Cookie：</value>
+  </data>
+  <data name="label15.Text" xml:space="preserve">
+    <value>主機：</value>
+  </data>
+  <data name="label16.Text" xml:space="preserve">
+    <value>*如果出現無法下載的情況，請先檢查主機地址是否正確，其次是登陸信息！一般登陸信息有效期很長。</value>
+  </data>
+  <data name="label18.Text" xml:space="preserve">
+    <value>主題：</value>
+  </data>
+  <data name="label19.Text" xml:space="preserve">
+    <value>CDN加速狀態：</value>
+  </data>
+  <data name="label19.ToolTip" xml:space="preserve">
+    <value>CDN主機地址由A9VG會員lucky☆star提供</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>服務狀態：</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>截取規則：</value>
+  </data>
+  <data name="label4.Text" xml:space="preserve">
+    <value>PSX DownloadHelper</value>
+  </data>
+  <data name="label5.Text" xml:space="preserve">
+    <value>語言：</value>
+  </data>
+  <data name="label6.Text" xml:space="preserve">
+    <value>KOP-Elan</value>
+  </data>
+  <data name="label7.Text" xml:space="preserve">
+    <value>離線加速：</value>
+  </data>
+  <data name="label8.Text" xml:space="preserve">
+    <value>本地加速：</value>
+  </data>
+  <data name="label9.Text" xml:space="preserve">
+    <value>PC代理：</value>
+  </data>
+  <data name="labelconn.Text" xml:space="preserve">
+    <value>連接模式：</value>
+  </data>
+  <data name="lb_alert.Text" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="lb_conntype.Text" xml:space="preserve">
+    <value>默認</value>
+  </data>
+  <data name="lb_donte.Text" xml:space="preserve">
+    <value>特別感謝一下朋友對開發的資助：</value>
+  </data>
+  <data name="lb_dontemark.Text" xml:space="preserve">
+    <value>（未留名的朋友以捐助名及賬號前三位代替，排名不分先後）</value>
+  </data>
+  <data name="lb_thanks.Text" xml:space="preserve">
+    <value>特別貢獻：</value>
+  </data>
+  <data name="lb_title.Text" xml:space="preserve">
+    <value>訪問與替換記錄</value>
+  </data>
+  <data name="lb_vision.Text" xml:space="preserve">
+    <value>版本：</value>
+  </data>
+  <data name="menu_editcdnhost.Text" xml:space="preserve">
+    <value>編輯主要主機地址</value>
+  </data>
+  <data name="menu_editcustom.Text" xml:space="preserve">
+    <value>編輯自定義主機地址</value>
+  </data>
+  <data name="pic_cdnloading.ToolTip" xml:space="preserve">
+    <value>正在檢查CDN主機狀態…</value>
+  </data>
+  <data name="pic_cdnsuccess.ToolTip" xml:space="preserve">
+    <value>CDN加速正在運行</value>
+  </data>
+  <data name="replacetip" xml:space="preserve">
+    <value>點擊選取或將要替換的文件拖放至此啓用本地加速</value>
+  </data>
+  <data name="rtf_about.Text" xml:space="preserve">
+    <value>PSX Download Helper，這是一款可以用來加速遊戲主機從商店下載遊戲，軟體以及升級系統的應用。
+軟體提供了多種解決方案來解決玩家無法更新系統和下載遊戲速度太慢的問題，你可以選擇「本地加速」模式，用軟體截取到更新或者遊戲的下載位址用迅雷或者QQ旋風等下載工具下載到本地，然後回傳到PSV。也可以使用「PC代理模式」和「離線加速」模式直接從主機上高速下載遊戲和更新。
+特別貢獻：
+*CDN加速功能由A9VG會員lucky☆star提出，并提供的CDN主機地址，感謝！
+新浪微博：KOP-Elan</value>
+  </data>
+  <data name="rulealert" xml:space="preserve">
+    <value>請輸入匹配規則！</value>
+  </data>
+  <data name="savesuccess" xml:space="preserve">
+    <value>保存成功！</value>
+  </data>
+  <data name="setlanguage" xml:space="preserve">
+    <value>語言設置成功，請重新啓動軟件！</value>
+  </data>
+  <data name="settingapply" xml:space="preserve">
+    <value>設置已應用！</value>
+  </data>
+  <data name="tabPage1.Text" xml:space="preserve">
+    <value>貢獻</value>
+  </data>
+  <data name="tabPage_about.Text" xml:space="preserve">
+    <value>關於</value>
+  </data>
+  <data name="tabPage_log.Text" xml:space="preserve">
+    <value>記錄</value>
+  </data>
+  <data name="tabPage_set.Text" xml:space="preserve">
+    <value>設置</value>
+  </data>
+  <data name="tab_history.Text" xml:space="preserve">
+    <value>歷史記錄</value>
+  </data>
+  <data name="tab_lixian.Text" xml:space="preserve">
+    <value>離線加速</value>
+  </data>
+  <data name="tab_lixianset.Text" xml:space="preserve">
+    <value>離線設置</value>
+  </data>
+  <data name="tb_rule.Text" xml:space="preserve">
+    <value>*.pkg*</value>
+  </data>
+  <data name="UpdateAlert" xml:space="preserve">
+    <value>新版本已經發佈，點擊查看更新！</value>
+  </data>
+  <data name="updateerror" xml:space="preserve">
+    <value>檢查更新出錯，請到專案主頁查看最新版本！是否關閉軟體自動更新功能？</value>
+  </data>
+  <data name="exportsuccess" xml:space="preserve">
+    <value>已將CDN主機位址匯出至Hosts\ExportCdnHosts.txt檔中</value>
+  </data>
+  <data name="link_translation.Text" xml:space="preserve">
+    <value>翻譯爲其他語言或者提供更好的翻譯建議</value>
+  </data>
+  <data name="btn_findloaclfolder.Text" xml:space="preserve">
+    <value>選擇目錄</value>
+  </data>
+  <data name="ckb_autofindfile.Text" xml:space="preserve">
+    <value>自動查找替換文件</value>
+  </data>
+  <data name="cdn_update" xml:space="preserve">
+    <value>此操作會自動更新CdnHost.ini檔，如果手動添加過記錄，請做好備份。</value>
+  </data>
+  <data name="cdn_updatefailed" xml:space="preserve">
+    <value>更新失敗，請稍後再試。</value>
+  </data>
+  <data name="cdn_updatesuccess" xml:space="preserve">
+    <value>已經將本地CDN清單更新為伺服器的最新版本！請點擊「重新檢查主機狀態」以便新的主機位址生效！</value>
+  </data>
+  <data name="menu_openservercdn.Text" xml:space="preserve">
+    <value>查看最新CDN位址</value>
+  </data>
+  <data name="menu_updatecdn.Text" xml:space="preserve">
+    <value>下載最新主機位址</value>
+  </data>
+  <data name="btn_featuring.Text" xml:space="preserve">
+    <value>功能導覽</value>
+  </data>
+</root>

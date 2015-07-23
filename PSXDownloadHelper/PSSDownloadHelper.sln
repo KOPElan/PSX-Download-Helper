@@ -1,0 +1,85 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSXDownloadHelperUI", "PSXDownloadHelper\PSXDownloadHelperUI.csproj", "{58043E69-8639-494F-9564-E3F6754B2868}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSXDH.ProxyHelp", "PSXDH.ProxyHelp\PSXDH.ProxyHelp.csproj", "{388A85C4-39A6-4FAF-9976-1714C88B397B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSXDH.HttpsHelp", "PSXDH.HttpsHelp\PSXDH.HttpsHelp.csproj", "{1EBAA286-E253-4C87-A2FE-F47D859CE892}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSXDH.Model", "PSXDH.Model\PSXDH.Model.csproj", "{BDBC1BF6-82D8-40B5-9CED-F063F60B4960}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSXDH.DAL", "PSXDH.DAL\PSXDH.DAL.csproj", "{D0F111E4-1A98-4B7A-890F-DD8E73518D91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSXDH.BLL", "PSXDH.BLL\PSXDH.BLL.csproj", "{E58F43CB-7A44-41BC-8BD6-DE7DDA84A83D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpWizard", "HelpWizard\HelpWizard.csproj", "{A8DF5612-4545-466B-AF8A-F887A9ADB895}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 8
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs35
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = PSXDH.DAL\\PSXDH.DAL.csproj
+		SccProjectName1 = PSXDH.DAL
+		SccLocalPath1 = PSXDH.DAL
+		SccProjectUniqueName2 = PSXDH.HttpsHelp\\PSXDH.HttpsHelp.csproj
+		SccProjectName2 = PSXDH.HttpsHelp
+		SccLocalPath2 = PSXDH.HttpsHelp
+		SccProjectUniqueName3 = PSXDH.Model\\PSXDH.Model.csproj
+		SccProjectName3 = PSXDH.Model
+		SccLocalPath3 = PSXDH.Model
+		SccProjectUniqueName4 = PSXDH.ProxyHelp\\PSXDH.ProxyHelp.csproj
+		SccProjectName4 = PSXDH.ProxyHelp
+		SccLocalPath4 = PSXDH.ProxyHelp
+		SccProjectUniqueName5 = PSXDownloadHelper\\PSXDownloadHelperUI.csproj
+		SccProjectName5 = PSXDownloadHelper
+		SccLocalPath5 = PSXDownloadHelper
+		SccProjectUniqueName6 = PSXDH.BLL\\PSXDH.BLL.csproj
+		SccProjectName6 = PSXDH.BLL
+		SccLocalPath6 = PSXDH.BLL
+		SccProjectUniqueName7 = HelpWizard\\HelpWizard.csproj
+		SccProjectName7 = HelpWizard
+		SccLocalPath7 = HelpWizard
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58043E69-8639-494F-9564-E3F6754B2868}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58043E69-8639-494F-9564-E3F6754B2868}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58043E69-8639-494F-9564-E3F6754B2868}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58043E69-8639-494F-9564-E3F6754B2868}.Release|Any CPU.Build.0 = Release|Any CPU
+		{388A85C4-39A6-4FAF-9976-1714C88B397B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{388A85C4-39A6-4FAF-9976-1714C88B397B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{388A85C4-39A6-4FAF-9976-1714C88B397B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{388A85C4-39A6-4FAF-9976-1714C88B397B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EBAA286-E253-4C87-A2FE-F47D859CE892}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EBAA286-E253-4C87-A2FE-F47D859CE892}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EBAA286-E253-4C87-A2FE-F47D859CE892}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EBAA286-E253-4C87-A2FE-F47D859CE892}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDBC1BF6-82D8-40B5-9CED-F063F60B4960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDBC1BF6-82D8-40B5-9CED-F063F60B4960}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDBC1BF6-82D8-40B5-9CED-F063F60B4960}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDBC1BF6-82D8-40B5-9CED-F063F60B4960}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0F111E4-1A98-4B7A-890F-DD8E73518D91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0F111E4-1A98-4B7A-890F-DD8E73518D91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0F111E4-1A98-4B7A-890F-DD8E73518D91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0F111E4-1A98-4B7A-890F-DD8E73518D91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E58F43CB-7A44-41BC-8BD6-DE7DDA84A83D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E58F43CB-7A44-41BC-8BD6-DE7DDA84A83D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E58F43CB-7A44-41BC-8BD6-DE7DDA84A83D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E58F43CB-7A44-41BC-8BD6-DE7DDA84A83D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8DF5612-4545-466B-AF8A-F887A9ADB895}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8DF5612-4545-466B-AF8A-F887A9ADB895}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8DF5612-4545-466B-AF8A-F887A9ADB895}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8DF5612-4545-466B-AF8A-F887A9ADB895}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

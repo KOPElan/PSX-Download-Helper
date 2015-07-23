@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="alertLabel1.Text" xml:space="preserve">
+    <value>Wireless settings, if you have a wireless card that supports open mode, you can quickly open from here, in open mode before running the software open it with administrator, re-enter the interface configuration of the AP.</value>
+  </data>
+  <data name="alert_set.Text" xml:space="preserve">
+    <value>Settings have been changed!</value>
+  </data>
+  <data name="btn_CheckCdn.Text" xml:space="preserve">
+    <value>Recheck the hosts</value>
+  </data>
+  <data name="btn_checkupdate.Text" xml:space="preserve">
+    <value>Check for Updates</value>
+  </data>
+  <data name="btn_delall.Text" xml:space="preserve">
+    <value>Clear history</value>
+  </data>
+  <data name="btn_editcdn.Text" xml:space="preserve">
+    <value>Edit Host List</value>
+  </data>
+  <data name="Btn_ExportCdn.Text" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="btn_lx1.Text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="btn_lx2.Text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="btn_lxhelp.Text" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="btn_savesetting.Text" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="btn_showalllog.Text" xml:space="preserve">
+    <value>Loading History</value>
+  </data>
+  <data name="cdnerror" xml:space="preserve">
+    <value>Something error with CDN host,</value>
+  </data>
+  <data name="cdnfileerror" xml:space="preserve">
+    <value>Please check the configuration file!</value>
+  </data>
+  <data name="checkupdatenow" xml:space="preserve">
+    <value>Checking for updates ......</value>
+  </data>
+  <data name="ckb_autoupdate.Text" xml:space="preserve">
+    <value>Check for updates automatically</value>
+  </data>
+  <data name="Ckb_HideFrm.Text" xml:space="preserve">
+    <value>Minimize to tray</value>
+  </data>
+  <data name="ckb_lx1.Text" xml:space="preserve">
+    <value>Use this configuration</value>
+  </data>
+  <data name="ckb_lx2.Text" xml:space="preserve">
+    <value>Use this configuration</value>
+  </data>
+  <data name="ckb_mohu.Text" xml:space="preserve">
+    <value>Ignore the right matching rules</value>
+  </data>
+  <data name="ckb_usecustome.Text" xml:space="preserve">
+    <value>Enable custom parsing</value>
+  </data>
+  <data name="groupBox1.Text" xml:space="preserve">
+    <value>Configure 1</value>
+  </data>
+  <data name="groupBox2.Text" xml:space="preserve">
+    <value>Configure 2</value>
+  </data>
+  <data name="historydelalert" xml:space="preserve">
+    <value>This will delete the files DataFiles and DataHistory.xml All previous historical are lost, if you want to continue?</value>
+  </data>
+  <data name="historydelerror" xml:space="preserve">
+    <value>Empty logging error! Error message:</value>
+  </data>
+  <data name="historydelsuccess" xml:space="preserve">
+    <value>History successfully deleted, restart the software.</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>* For any matching, multiple matching words with '|' separated, such as *.pkg*|*.exe * Indicates match both included .pkg and .exe</value>
+  </data>
+  <data name="label10.Text" xml:space="preserve">
+    <value>Cookie:</value>
+  </data>
+  <data name="label11.Text" xml:space="preserve">
+    <value>Hosts:</value>
+  </data>
+  <data name="label12.Text" xml:space="preserve">
+    <value>Mark:</value>
+  </data>
+  <data name="label13.Text" xml:space="preserve">
+    <value>Mark:</value>
+  </data>
+  <data name="label14.Text" xml:space="preserve">
+    <value>Cookie:</value>
+  </data>
+  <data name="label15.Text" xml:space="preserve">
+    <value>Hosts:</value>
+  </data>
+  <data name="label16.Text" xml:space="preserve">
+    <value>* If the case can not download, please check if the host address is correct, followed by the login information! It is usually valid for one login information for a long time.</value>
+  </data>
+  <data name="label18.Text" xml:space="preserve">
+    <value>Theme:</value>
+  </data>
+  <data name="label19.Text" xml:space="preserve">
+    <value>CDN Status:</value>
+  </data>
+  <data name="label19.ToolTip" xml:space="preserve">
+    <value>CDN host address by the A9VG member lucky ☆ star offers</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Status：</value>
+  </data>
+  <data name="label20.Text" xml:space="preserve">
+    <value>|</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>Rules:</value>
+  </data>
+  <data name="label4.Text" xml:space="preserve">
+    <value>PSX Download Helper</value>
+  </data>
+  <data name="label5.Text" xml:space="preserve">
+    <value>Language:</value>
+  </data>
+  <data name="label6.Text" xml:space="preserve">
+    <value>KOP-Elan</value>
+  </data>
+  <data name="label7.Text" xml:space="preserve">
+    <value>Offline：</value>
+  </data>
+  <data name="label8.Text" xml:space="preserve">
+    <value>Local：</value>
+  </data>
+  <data name="label9.Text" xml:space="preserve">
+    <value>PC Agent：</value>
+  </data>
+  <data name="labelconn.Text" xml:space="preserve">
+    <value>Mode：</value>
+  </data>
+  <data name="lb_alert.Text" xml:space="preserve">
+    <value>Alert</value>
+  </data>
+  <data name="lb_conntype.Text" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="lb_copyright.Text" xml:space="preserve">
+    <value>lb_copyright</value>
+  </data>
+  <data name="lb_donte.Text" xml:space="preserve">
+    <value>Special thanks to the following friends on the development and financing:</value>
+  </data>
+  <data name="lb_dontemark.Text" xml:space="preserve">
+    <value>(Not leaving a friend's name and account number of the top three donors replaced in alphabetical order)</value>
+  </data>
+  <data name="lb_product.Text" xml:space="preserve">
+    <value>PSX DownloadHelper</value>
+  </data>
+  <data name="lb_thanks.Text" xml:space="preserve">
+    <value>Special contribution:</value>
+  </data>
+  <data name="lb_title.Text" xml:space="preserve">
+    <value>Access and replace records</value>
+  </data>
+  <data name="lb_vision.Text" xml:space="preserve">
+    <value>Version:</value>
+  </data>
+  <data name="menu_editcdnhost.Text" xml:space="preserve">
+    <value>Edit the main host address</value>
+  </data>
+  <data name="menu_editcustom.Text" xml:space="preserve">
+    <value>Edit a custom host address</value>
+  </data>
+  <data name="pic_cdnloading.ToolTip" xml:space="preserve">
+    <value>CDN host status is being checked ...</value>
+  </data>
+  <data name="pic_cdnsuccess.ToolTip" xml:space="preserve">
+    <value>CDN acceleration running</value>
+  </data>
+  <data name="replacetip" xml:space="preserve">
+    <value>Select the local file or drag-and-drop here to enabled the local acceleration</value>
+  </data>
+  <data name="rtf_about.Text" xml:space="preserve">
+    <value>PSX Download Helper, this is a game console can be used to accelerate the download games from the store, software and upgrade systems.Software provides a variety of solutions to update the system and the players can not download the game too slow problem, you can select "Local acceleration" mode, using software to update or interception of the game with the Thunder download address or QQ Tornado Transport to download locally, and then back to PSV. You can also use "PC proxy mode" and "offline accelerated" mode directly from the host high-speed download games and updates.Sina microblogging: KOP-Elan</value>
+  </data>
+  <data name="rulealert" xml:space="preserve">
+    <value>Please enter the matching rules!</value>
+  </data>
+  <data name="savesuccess" xml:space="preserve">
+    <value>Save successful!</value>
+  </data>
+  <data name="setlanguage" xml:space="preserve">
+    <value>Successfully saved language settings,please restart the app</value>
+  </data>
+  <data name="settingapply" xml:space="preserve">
+    <value>Settings have been applied!</value>
+  </data>
+  <data name="tabPage1.Text" xml:space="preserve">
+    <value>Contribution</value>
+  </data>
+  <data name="tabPage_about.Text" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="tabPage_log.Text" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="tabPage_set.Text" xml:space="preserve">
+    <value>Setting</value>
+  </data>
+  <data name="tab_history.Text" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="tab_lixian.Text" xml:space="preserve">
+    <value>Offline Raising</value>
+  </data>
+  <data name="tab_lixianset.Text" xml:space="preserve">
+    <value>Offline Settings</value>
+  </data>
+  <data name="tb_rule.Text" xml:space="preserve">
+    <value>*.pkg*</value>
+  </data>
+  <data name="UpdateAlert" xml:space="preserve">
+    <value>The new version has been released, click View update!</value>
+  </data>
+  <data name="updateerror" xml:space="preserve">
+    <value>Check for update error, please go to the project home page to view the latest version! Turn off the automatic update feature?</value>
+  </data>
+  <data name="exportsuccess" xml:space="preserve">
+    <value>CDN hosts have been exported to the Hosts\ExportCdnHosts.txt</value>
+  </data>
+  <data name="link_translation.Text" xml:space="preserve">
+    <value>Translation into other languages, or provide a better advice</value>
+  </data>
+  <data name="btn_findloaclfolder.Text" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="ckb_autofindfile.Text" xml:space="preserve">
+    <value>Auto Find ReplaceFile</value>
+  </data>
+  <data name="cdn_update" xml:space="preserve">
+    <value>This will update the CdnHost.ini file, if you manually added records, please make backup.</value>
+  </data>
+  <data name="cdn_updatefailed" xml:space="preserve">
+    <value>Update failed, please try again later.</value>
+  </data>
+  <data name="cdn_updatesuccess" xml:space="preserve">
+    <value>Local CDN list has been updated to the latest versions of the server! Please click the "recheck the host" for new host address to take effect!</value>
+  </data>
+  <data name="menu_openservercdn.Text" xml:space="preserve">
+    <value>Open the latest CDN address</value>
+  </data>
+  <data name="menu_updatecdn.Text" xml:space="preserve">
+    <value>Download the latest host address</value>
+  </data>
+  <data name="btn_featuring.Text" xml:space="preserve">
+    <value>Featuring</value>
+  </data>
+</root>

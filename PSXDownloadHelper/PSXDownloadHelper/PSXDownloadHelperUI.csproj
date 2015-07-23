@@ -1,0 +1,401 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{58043E69-8639-494F-9564-E3F6754B2868}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PSXDownloadHelper</RootNamespace>
+    <AssemblyName>PSXDownloadHelper</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <PublishUrl>C:\Users\dongx_000\Desktop\pdh\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <SupportUrl>http://www.elanblog.com</SupportUrl>
+    <ProductName>PSXDownloadHelper</ProductName>
+    <PublisherName>PSX Download Helper</PublisherName>
+    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationVersion>1.7.4.%2a</ApplicationVersion>
+    <UseApplicationTrust>true</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\AppIco.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>D08B00968623C2A241E8EFD9981CBE97341931F4</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>PSXDownloadHelperUI_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>PSXDownloadHelper_Key.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MetroStyle, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Reference\MetroStyle.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppSettings.Designer.cs">
+      <DependentUpon>AppSettings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="CheckUpdate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CheckUpdate.Designer.cs">
+      <DependentUpon>CheckUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\SettingHelper.cs" />
+    <Compile Include="Featuring.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Featuring.Designer.cs">
+      <DependentUpon>Featuring.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ServerConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServerConfig.Designer.cs">
+      <DependentUpon>ServerConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LogWin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LogWin.Designer.cs">
+      <DependentUpon>LogWin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UrlReplace.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UrlReplace.Designer.cs">
+      <DependentUpon>UrlReplace.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WifiAp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WifiAp.Designer.cs">
+      <DependentUpon>WifiAp.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="CheckUpdate.resx">
+      <DependentUpon>CheckUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Featuring.resx">
+      <DependentUpon>Featuring.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogWin.en.resx">
+      <DependentUpon>LogWin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogWin.pt-BR.resx">
+      <DependentUpon>LogWin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogWin.resx">
+      <DependentUpon>LogWin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogWin.zh-CHS.resx">
+      <DependentUpon>LogWin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogWin.zh-CHT.resx">
+      <DependentUpon>LogWin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerConfig.en.resx">
+      <DependentUpon>ServerConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerConfig.pt-BR.resx">
+      <DependentUpon>ServerConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerConfig.resx">
+      <DependentUpon>ServerConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerConfig.zh-CHS.resx">
+      <DependentUpon>ServerConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerConfig.zh-CHT.resx">
+      <DependentUpon>ServerConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UrlReplace.en.resx">
+      <DependentUpon>UrlReplace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UrlReplace.pt-BR.resx">
+      <DependentUpon>UrlReplace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UrlReplace.resx">
+      <DependentUpon>UrlReplace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UrlReplace.zh-CHS.resx">
+      <DependentUpon>UrlReplace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UrlReplace.zh-CHT.resx">
+      <DependentUpon>UrlReplace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WifiAp.en.resx">
+      <DependentUpon>WifiAp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WifiAp.pt-BR.resx">
+      <DependentUpon>WifiAp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WifiAp.resx">
+      <DependentUpon>WifiAp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WifiAp.zh-CHS.resx">
+      <DependentUpon>WifiAp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WifiAp.zh-CHT.resx">
+      <DependentUpon>WifiAp.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="AppSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>AppSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Extensions\fonts\basic.icons.eot">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Extensions\fonts\basic.icons.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Extensions\fonts\basic.icons.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Extensions\fonts\icons.eot">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Extensions\fonts\icons.otf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Extensions\fonts\icons.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Extensions\fonts\icons.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hosts\CustomHosts.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PSXDH.BLL\PSXDH.BLL.csproj">
+      <Project>{e58f43cb-7a44-41bc-8bd6-de7dda84a83d}</Project>
+      <Name>PSXDH.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PSXDH.HttpsHelp\PSXDH.HttpsHelp.csproj">
+      <Project>{1ebaa286-e253-4c87-a2fe-f47d859ce892}</Project>
+      <Name>PSXDH.HttpsHelp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PSXDH.Model\PSXDH.Model.csproj">
+      <Project>{bdbc1bf6-82d8-40b5-9ced-f063f60b4960}</Project>
+      <Name>PSXDH.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PSXDH.ProxyHelp\PSXDH.ProxyHelp.csproj">
+      <Project>{388a85c4-39a6-4faf-9976-1714c88b397b}</Project>
+      <Name>PSXDH.ProxyHelp</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Extensions\css\semantic.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\css\site.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\donations-by-alipay.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\donations-by-paypal.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\Featuring.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\fonts\basic.icons.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\fonts\icons.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\images\loader-large-inverted.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\images\loader-large.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\images\loader-medium-inverted.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\images\loader-medium.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\images\loader-mini-inverted.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\images\loader-mini.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\images\loader-small-inverted.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\images\loader-small.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\javascript\semantic.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="License\LICENSE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="License\README.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\about.png" />
+    <None Include="PSXDownloadHelper_Key.pfx" />
+    <None Include="Resources\AP.png" />
+    <None Include="Hosts\CdnHosts.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="Resources\AppIco.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\AppIco.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\cdnstatus-y.gif" />
+    <Content Include="Resources\cdnstatus-b.gif" />
+    <Content Include="Resources\cdn.png" />
+    <Content Include="Resources\cdncolor.png" />
+    <Content Include="Resources\cdnloading.gif" />
+    <Content Include="DataFiles\DataHistory.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Extensions\images\donate-with-alipay.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extensions\images\donate-with-paypal.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\cdnstatus.gif" />
+    <Content Include="Resources\help.png" />
+    <Content Include="Extensions\javascript\jquery-1.8.3.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Reference\MetroStyle.dll" />
+    <Content Include="Resources\minus.png" />
+    <Content Include="Resources\nocdn.png" />
+    <Content Include="Resources\play.png" />
+    <Content Include="Resources\setting.png" />
+    <Content Include="Resources\stutas.gif" />
+    <Content Include="Extensions\weibo.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\wifi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 和 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,62 @@
+﻿html
+{
+    margin: 0;
+    padding: 0;
+}
+
+body
+{
+    margin: 0;
+    padding: 0;
+    border-top: 2px #00b5ad solid;
+    background-color: #fff;
+    color: #333;
+    font-size: .85em;
+    font-family: "Segoe UI",Verdana,Helvetica,Sans-Serif;
+    line-height: 20px;
+}
+
+a
+{
+    padding-right: 3px;
+    padding-left: 3px;
+    color: #096ec4;
+    text-decoration: none;
+}
+
+    a:link, a:visited,
+    a:active
+    {
+        color: #096ec4;
+    }
+
+header
+{
+    margin-bottom: 10px;
+}
+
+footer
+{
+    margin-top: 10px;
+    text-align: center;
+}
+
+.content-wrap
+{
+    margin: 0 auto;
+    width: 960px;
+}
+
+.txtcenter
+{
+    clear: both;
+    text-align: center;
+}
+
+.notfoundbk
+{
+    background: url(images/404.jpg);
+    position:absolute;
+    top:0;
+    left:0;
+}

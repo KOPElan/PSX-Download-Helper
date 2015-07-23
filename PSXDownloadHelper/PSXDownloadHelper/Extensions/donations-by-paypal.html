@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>感谢您对PSX Download Helper的支持！</title>
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/semantic.min.css" rel="stylesheet" />
+    <script src="javascript/jquery-1.8.3.min.js"></script>
+    <script src="javascript/semantic.min.js"></script>
+    <script>
+        $(function () {
+            $("#paypal-info").dimmer({
+                closable: false,
+                onShow: function () { setTimeout("$('#paypal-info').dimmer('hide');", 2000) }
+            });
+            $("#paypal-info").dimmer("show");
+            document.forms['PayPalSubmit'].submit();
+        });
+    </script>
+</head>
+<body>
+    <br />
+    <br />
+    <div class="ui three column grid" style="display: block;">
+        <div class="row">
+            <div class="column"></div>
+            <div class="column">
+                <div class="ui stacked segment">
+                    <div class="ui ribbon label">捐助</div>
+                    <h3>感谢您对PSX Download Helper开发的支持！</h3>
+                    <p style="font-size: 13px;">请等待页面跳转至PayPal，如果页面长时间没有响应请点击以下按钮。</p>
+                    <br />
+                    <form id="PayPalSubmit" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                        <input type="hidden" name="cmd" value="_donations" />
+                        <input type="hidden" name="business" value="RVPSGPM62AQMW" />
+                        <input type="hidden" name="lc" value="C2" />
+                        <input type="hidden" name="item_name" value="Donations For PSX DownloadHelper" />
+                        <input type="hidden" name="currency_code" value="USD" />
+                        <input type="hidden" name="button_subtype" value="services" />
+                        <input type="hidden" name="bn" value="PP-BuyNowBF:donate-with-paypal.png:NonHosted" />
+                        <input type="image" src="images/donate-with-paypal.png" border="0" name="submit" alt="Donations By PayPal" />
+                        <img alt="" border="0" src="https://www.paypalobjects.com/zh_XC/i/scr/pixel.gif" width="1" height="1" />
+                    </form>
+                </div>
+            </div>
+            <div class="column"></div>
+        </div>
+    </div>
+    <div class="ui page dimmer" id="paypal-info">
+        <div class="content">
+            <div class="center">
+                <h2 class="ui inverted icon header">
+                    <i class="icon circular inverted emphasized teal loading"></i>
+                    感谢您对PSX Download Helper开发的支持！
+                    <div class="sub header">正在为您跳转至PayPal捐助页面……</div>
+                </h2>
+            </div>
+        </div>
+    </div>
+    <footer>
+        Elan's Blog @ 2013
+    </footer>
+</body>
+</html>
