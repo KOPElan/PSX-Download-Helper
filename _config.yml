@@ -1,0 +1,8 @@
+title: PSX Download Helper
+description: "PSX Download Helper "
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-architect
+
+gems:
+  - jekyll-mentions
