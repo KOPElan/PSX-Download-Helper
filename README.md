@@ -1,13 +1,5 @@
 # PSX Download Helper
 
-## 正在开发uwp版的psx download helper
-
-## I am  working with the uwp version of psx download helper
-
-## 发布时间待定
-
-## Release Date To Be Determined
-
 本源代码基于GPLv3协议并同时遵循以下附加协议，保留版权及作者信息的情况下可以自由的参考，修改，发布，但禁止商业用途。发行版需同样遵从GPLv3协议，并在CodePlex上公开源代码。
 
 开放源代码说明：
