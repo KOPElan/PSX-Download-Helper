@@ -1,14 +1,23 @@
-### Welcome to GitHub Pages.
-This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here [using GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/), select a template crafted by a designer, and publish. After your page is generated, you can check out the new `gh-pages` branch locally. If you’re using GitHub for Mac or GitHub for Windows, simply sync your repository and you’ll see the new branch.
+# PSX Download Helper
 
-### Designer Templates
-We’ve crafted some handsome templates for you to use. Go ahead and click 'Continue to layouts' to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved.
+本源代码基于GPLv3协议并同时遵循以下附加协议，保留版权及作者信息的情况下可以自由的参考，修改，发布，但禁止商业用途。发行版需同样遵从GPLv3协议，并在Github上公开源代码。
 
-### Creating pages manually
-If you prefer to not use the automatic generator, push a branch named `gh-pages` to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.
+开放源代码说明：
 
-### Authors and Contributors
-You can @mention a GitHub username to generate a link to their profile. The resulting `<a>` element will link to the contributor’s GitHub Profile. For example: In 2007, Chris Wanstrath (@defunkt), PJ Hyett (@pjhyett), and Tom Preston-Werner (@mojombo) founded GitHub.
+此版本基于PSX Download Helper1.8源代码
+此源代码在GPLv3开源协议下发布并遵守附加协议之规定
+GPLv3协议允许个人或组织自由使用，复制，分发以及修改源代码
+基于此源代码发行的软件必须遵守GPLv3协议与附加协议
+附加协议：
 
-### Support or Contact
-Having trouble with Pages? Check out our [documentation](https://help.github.com/pages) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+1. 此源代码禁止用于商业用途
+2. 禁止以本软件之名对用户进行收费
+3. 修改源代码需保留“关于”与“贡献”两个选项卡的内容
+
+相关信息：
+此仓库仅做备份，目前并无更新计划。
+如果你更改了源代码，并发布了新版本，请注意：
+1. 必须保留原作者及版权信息，保留“关于”选项卡内容以及“贡献”选项卡的内容
+
+请作者喝杯咖啡：
+<img src="http://www.tsingosoft.com/images/alipay.jpg" width="200">
