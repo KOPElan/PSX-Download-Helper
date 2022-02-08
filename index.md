@@ -20,4 +20,4 @@ GPLv3协议允许个人或组织自由使用，复制，分发以及修改源代
 1. 必须保留原作者及版权信息，保留“关于”选项卡内容以及“贡献”选项卡的内容
 
 请作者喝杯咖啡：
-<img src="http://www.tsingosoft.com/images/alipay.jpg" width="200">
+<img src="alipay.jpg" width="200">
