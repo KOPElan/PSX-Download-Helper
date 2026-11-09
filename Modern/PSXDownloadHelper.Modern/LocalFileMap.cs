@@ -9,14 +9,15 @@ namespace PSXDownloadHelper.Modern;
 /// </summary>
 internal sealed class LocalFileMap
 {
-    private readonly string _configPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "PSXDownloadHelper", "local-mappings.json");
+    private readonly string _configPath;
     private readonly Action<string> _log;
 
-    public LocalFileMap(Action<string> log)
+    public LocalFileMap(Action<string> log, string? configPath = null)
     {
         _log = log;
+        _configPath = configPath ?? Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "PSXDownloadHelper", "local-mappings.json");
         _ = LoadMappings();
     }
 
