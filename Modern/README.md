@@ -43,6 +43,38 @@ HTTPS connections use CONNECT tunnelling. The proxy can observe the destination
 host and port but does not inspect encrypted HTTPS payloads. Do not install a
 custom root certificate or disable TLS validation.
 
+## Local URL-to-file mappings
+
+On first launch, the app creates a starter configuration at:
+
+`%LOCALAPPDATA%\\PSXDownloadHelper\\local-mappings.json`
+
+Edit the JSON file while the proxy is running; mappings are reloaded for each
+HTTP request. Each entry maps one exact HTTP URL (including its path and query)
+to an existing local file:
+
+```json
+[
+  {
+    "url": "http://example.com/game.pkg",
+    "filePath": "C:\\\\PSXOffline\\\\game.pkg"
+  }
+]
+```
+
+A matching GET or HEAD request is served locally without contacting the remote
+server. GET supports one byte range, including open-ended and suffix ranges,
+and returns `206 Partial Content`, `Content-Range`, and `Accept-Ranges`.
+Unsatisfiable or unsupported multi-range requests return `416`. HEAD returns
+headers only. The mapping uses an explicit local file path; URL path segments
+are never appended to that path. The file path must be readable by the current
+Windows user.
+
+This first mapping milestone handles cleartext HTTP proxy requests. HTTPS
+CONNECT remains an opaque TLS tunnel, so HTTPS URLs cannot be mapped or
+inspected without TLS interception; this project intentionally does not add
+certificate interception.
+
 ## Architecture roadmap
 
 1. Core proxy lifecycle, cancellation and structured request events.
