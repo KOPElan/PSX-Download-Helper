@@ -21,7 +21,7 @@ internal sealed class ProxyServer
 
     public event Action<string>? Log;
 
-    public bool IsRunning => _listener is not null;
+    public bool IsRunning => _listener is not null;\n\n    public string LocalMappingsPath => _localFileMap.ConfigPath;
 
     public Task StartAsync(IPAddress address, int port)
     {
