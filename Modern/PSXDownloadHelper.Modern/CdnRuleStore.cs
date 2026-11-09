@@ -17,8 +17,15 @@ internal sealed class CdnRuleStore
         try
         {
             EnsureConfig();
-            return JsonSerializer.Deserialize<List<CdnRule>>(File.ReadAllText(_path),
+            var loaded = JsonSerializer.Deserialize<List<CdnRule>>(File.ReadAllText(_path),
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
+            var valid = new List<CdnRule>();
+            foreach (var rule in loaded)
+            {
+                try { valid.Add(rule.NormalizeAndValidate()); }
+                catch (InvalidDataException) { }
+            }
+            return valid;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
         {
@@ -101,15 +108,19 @@ internal sealed class CdnRule
         if (!hostMatches)
             return false;
 
-        return MatchPathPrefix == "/" ||
-               uri.AbsolutePath.StartsWith(MatchPathPrefix, StringComparison.OrdinalIgnoreCase);
+        if (MatchPathPrefix == "/")
+            return true;
+        var prefix = MatchPathPrefix.TrimEnd('/');
+        return uri.AbsolutePath.Equals(prefix, StringComparison.OrdinalIgnoreCase) ||
+               uri.AbsolutePath.StartsWith(prefix + "/", StringComparison.OrdinalIgnoreCase);
     }
 
     public string RewritePath(string path)
     {
         if (MatchPathPrefix == "/")
             return JoinPath(TargetPathPrefix, path.TrimStart('/'));
-        return JoinPath(TargetPathPrefix, path[MatchPathPrefix.Length..].TrimStart('/'));
+        var consumed = MatchPathPrefix.TrimEnd('/').Length;
+        return JoinPath(TargetPathPrefix, path[consumed..].TrimStart('/'));
     }
 
     private static string JoinPath(string prefix, string remainder)
@@ -123,7 +134,7 @@ internal sealed class CdnRule
         var result = string.IsNullOrWhiteSpace(value) ? "/" : value.Trim();
         if (!result.StartsWith('/'))
             result = "/" + result;
-        if (result.Contains("..", StringComparison.Ordinal) || result.Contains('\\'))
+        if (result.Contains('\\') || result.Split('/').Any(segment => segment is "." or ".."))
             throw new InvalidDataException("Path prefixes cannot contain traversal segments or backslashes.");
         return result;
     }
