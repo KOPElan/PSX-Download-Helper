@@ -155,10 +155,9 @@ internal sealed class ProxyServer
                     Log?.Invoke($"CDN rule '{matchedRule}': {beforeCdnTarget.Host}{beforeCdnTarget.AbsolutePath} -> {target.Host}{target.AbsolutePath}");
 
                 var transferEncoding = GetHeaderValue(headerText, "Transfer-Encoding");
-                if (!string.IsNullOrWhiteSpace(transferEncoding) &&
-                    transferEncoding.Contains("chunked", StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(transferEncoding))
                 {
-                    await WriteErrorAsync(clientStream, 501, "Chunked request bodies are not supported", linked.Token).ConfigureAwait(false);
+                    await WriteErrorAsync(clientStream, 501, "Transfer-Encoding request bodies are not supported", linked.Token).ConfigureAwait(false);
                     return;
                 }
 
@@ -238,13 +237,32 @@ internal sealed class ProxyServer
 
     private static bool TryGetContentLength(string rawHeader, out long length)
     {
-        var value = GetHeaderValue(rawHeader, "Content-Length");
-        if (value is null)
+        var values = rawHeader.Split("\r\n", StringSplitOptions.RemoveEmptyEntries)
+            .Skip(1)
+            .Select(line =>
+            {
+                var separator = line.IndexOf(':');
+                return separator > 0 &&
+                       line[..separator].Trim().Equals("Content-Length", StringComparison.OrdinalIgnoreCase)
+                    ? line[(separator + 1)..].Trim()
+                    : null;
+            })
+            .Where(value => value is not null)
+            .ToArray();
+
+        if (values.Length == 0)
         {
             length = 0;
             return true;
         }
-        return long.TryParse(value, out length) && length >= 0;
+
+        if (values.Length != 1)
+        {
+            length = 0;
+            return false;
+        }
+
+        return long.TryParse(values[0], out length) && length >= 0;
     }
 
     private static async Task CopyExactlyAsync(Stream source, Stream destination, long bytesToCopy, CancellationToken token)

@@ -9,6 +9,56 @@ namespace PSXDownloadHelper.Modern.Tests;
 
 public sealed class ProxyServerTests
 {
+    [Theory]
+    [InlineData("Content-Length: 0\r\nContent-Length: 4\r\n", "400 Invalid Content-Length")]
+    [InlineData("Content-Length: 0, 4\r\n", "400 Invalid Content-Length")]
+    public async Task RejectsAmbiguousContentLengthHeaders(string contentLengthHeaders, string expectedStatus)
+    {
+        var proxy = new ProxyServer();
+        var proxyPort = GetFreePort();
+        await proxy.StartAsync(IPAddress.Loopback, proxyPort);
+        try
+        {
+            using var client = new TcpClient();
+            await client.ConnectAsync(IPAddress.Loopback, proxyPort);
+            var stream = client.GetStream();
+            var request = Encoding.ASCII.GetBytes(
+                $"POST http://127.0.0.1:1/upload HTTP/1.1\r\nHost: 127.0.0.1\r\n{contentLengthHeaders}Connection: close\r\n\r\n");
+            await stream.WriteAsync(request);
+            var response = await ReadToEndAsync(stream);
+
+            Assert.Contains($"HTTP/1.1 {expectedStatus}", response, StringComparison.Ordinal);
+        }
+        finally
+        {
+            await proxy.StopAsync();
+        }
+    }
+
+    [Fact]
+    public async Task RejectsUnsupportedTransferEncodingBeforeConnectingUpstream()
+    {
+        var proxy = new ProxyServer();
+        var proxyPort = GetFreePort();
+        await proxy.StartAsync(IPAddress.Loopback, proxyPort);
+        try
+        {
+            using var client = new TcpClient();
+            await client.ConnectAsync(IPAddress.Loopback, proxyPort);
+            var stream = client.GetStream();
+            var request = Encoding.ASCII.GetBytes(
+                "POST http://127.0.0.1:1/upload HTTP/1.1\r\nHost: 127.0.0.1\r\nTransfer-Encoding: gzip\r\nConnection: close\r\n\r\n");
+            await stream.WriteAsync(request);
+            var response = await ReadToEndAsync(stream);
+
+            Assert.Contains("HTTP/1.1 501 Transfer-Encoding request bodies are not supported", response, StringComparison.Ordinal);
+        }
+        finally
+        {
+            await proxy.StopAsync();
+        }
+    }
+
     [Fact]
     public async Task ConnectEstablishesOpaqueBidirectionalTunnel()
     {
