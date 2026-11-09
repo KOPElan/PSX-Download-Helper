@@ -37,7 +37,7 @@ internal sealed class OfflineUrlStore
     {
         var validated = rules.Select(rule => rule.NormalizeAndValidate()).ToList();
         var duplicates = validated
-            .GroupBy(rule => OfflineUrlRule.UrlKey(new Uri(rule.SourceUrl)), StringComparer.OrdinalIgnoreCase)
+            .GroupBy(rule => OfflineUrlRule.UrlKey(new Uri(rule.SourceUrl)), StringComparer.Ordinal)
             .FirstOrDefault(group => group.Count() > 1);
         if (duplicates is not null)
             throw new InvalidDataException($"Duplicate source URL: {duplicates.Key}");
