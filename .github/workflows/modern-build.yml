@@ -25,3 +25,5 @@ jobs:
           dotnet-version: "10.0.x"
       - name: Build modern solution
         run: dotnet build Modern/PSXDownloadHelper.Modern.sln --configuration Release
+      - name: Run modern integration tests
+        run: dotnet test Modern/PSXDownloadHelper.Modern.Tests/PSXDownloadHelper.Modern.Tests.csproj --configuration Release
