@@ -1,5 +1,7 @@
 # PSX Download Helper — Modern edition
 
+**Languages:** [فارسی](README.fa.md) | [English](README.md) | [راهنمای فارسی کل پروژه](../README.fa.md)
+
 A separate modernization track for the original PSX Download Helper. The
 original .NET Framework 4.0 solution remains under `PSXDownloadHelper/` and
 is not modified by this edition.
