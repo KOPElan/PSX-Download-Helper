@@ -130,6 +130,20 @@ internal sealed class ProxyServer
                 if (await _localFileMap.TryServeAsync(target, parts[0], headerText, clientStream, linked.Token).ConfigureAwait(false))
                     return;
 
+                var transferEncoding = GetHeaderValue(headerText, "Transfer-Encoding");
+                if (!string.IsNullOrWhiteSpace(transferEncoding) &&
+                    transferEncoding.Contains("chunked", StringComparison.OrdinalIgnoreCase))
+                {
+                    await WriteErrorAsync(clientStream, 501, "Chunked request bodies are not supported", linked.Token).ConfigureAwait(false);
+                    return;
+                }
+
+                if (!TryGetContentLength(headerText, out var requestBodyLength))
+                {
+                    await WriteErrorAsync(clientStream, 400, "Invalid Content-Length", linked.Token).ConfigureAwait(false);
+                    return;
+                }
+
                 Log?.Invoke($"HTTP {target.Host}:{target.Port} {target.PathAndQuery}");
                 using var upstream = new TcpClient();
                 await upstream.ConnectAsync(target.Host, target.Port, linked.Token).ConfigureAwait(false);
@@ -139,13 +153,16 @@ internal sealed class ProxyServer
                 var bytes = Encoding.ASCII.GetBytes(rewrittenHeader);
                 await upstreamStream.WriteAsync(bytes, linked.Token).ConfigureAwait(false);
 
-                var upload = clientStream.CopyToAsync(upstreamStream, linked.Token);
-                var download = upstreamStream.CopyToAsync(clientStream, linked.Token);
-                await Task.WhenAny(upload, download).ConfigureAwait(false);
-                linked.Cancel();
-                try { await Task.WhenAll(upload, download).ConfigureAwait(false); }
-                catch (OperationCanceledException) { }
-                catch (IOException) { }
+                if (GetHeaderValue(headerText, "Expect")?.Equals("100-continue", StringComparison.OrdinalIgnoreCase) == true &&
+                    requestBodyLength > 0)
+                {
+                    await clientStream.WriteAsync(Encoding.ASCII.GetBytes("HTTP/1.1 100 Continue\\r\\n\\r\\n"), linked.Token).ConfigureAwait(false);
+                }
+
+                if (requestBodyLength > 0)
+                    await CopyExactlyAsync(clientStream, upstreamStream, requestBodyLength, linked.Token).ConfigureAwait(false);
+
+                await upstreamStream.CopyToAsync(clientStream, linked.Token).ConfigureAwait(false);
             }
             catch (OperationCanceledException) { }
             catch (IOException ex) { Log?.Invoke($"Client disconnected: {ex.Message}"); }
@@ -182,6 +199,42 @@ internal sealed class ProxyServer
         try { await Task.WhenAll(upload, download).ConfigureAwait(false); }
         catch (OperationCanceledException) { }
         catch (IOException) { }
+    }
+
+    private static string? GetHeaderValue(string rawHeader, string name)
+    {
+        foreach (var line in rawHeader.Split("\\r\\n", StringSplitOptions.RemoveEmptyEntries).Skip(1))
+        {
+            var separator = line.IndexOf(':');
+            if (separator > 0 && line[..separator].Trim().Equals(name, StringComparison.OrdinalIgnoreCase))
+                return line[(separator + 1)..].Trim();
+        }
+        return null;
+    }
+
+    private static bool TryGetContentLength(string rawHeader, out long length)
+    {
+        var value = GetHeaderValue(rawHeader, "Content-Length");
+        if (value is null)
+        {
+            length = 0;
+            return true;
+        }
+        return long.TryParse(value, out length) && length >= 0;
+    }
+
+    private static async Task CopyExactlyAsync(Stream source, Stream destination, long bytesToCopy, CancellationToken token)
+    {
+        var buffer = new byte[64 * 1024];
+        var remaining = bytesToCopy;
+        while (remaining > 0)
+        {
+            var read = await source.ReadAsync(buffer.AsMemory(0, (int)Math.Min(buffer.Length, remaining)), token).ConfigureAwait(false);
+            if (read == 0)
+                throw new EndOfStreamException("Client closed before the complete request body was received.");
+            await destination.WriteAsync(buffer.AsMemory(0, read), token).ConfigureAwait(false);
+            remaining -= read;
+        }
     }
 
     private static string RewriteRequestHeader(string rawHeader, Uri target, string method, string version)
