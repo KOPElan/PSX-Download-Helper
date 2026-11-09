@@ -48,7 +48,7 @@ internal sealed class WifiHelperForm : Form
         _start.Click += async (_, _) => await ExecuteAsync(() => WifiHostedNetwork.StartAsync());
         _stop.Click += async (_, _) => await ExecuteAsync(() => WifiHostedNetwork.StopAsync());
 
-        Shown += async (_, _) => await ExecuteAsync(WifiHostedNetwork.GetDriverStatusAsync);
+        Shown += async (_, _) => await ExecuteAsync(() => WifiHostedNetwork.GetDriverStatusAsync());
     }
 
     private async Task ExecuteAsync(Func<Task<string>> operation)
