@@ -4,7 +4,7 @@ A separate modernization track for the original PSX Download Helper. The
 original .NET Framework 4.0 solution remains under `PSXDownloadHelper/` and
 is not modified by this edition.
 
-## Current status — 2.2.0
+## Current status — 2.3.0
 
 - New Windows Forms application targeting .NET 10.
 - Async local TCP proxy listener.
@@ -13,8 +13,9 @@ is not modified by this edition.
 - Request logging and configurable bind address / port.
 - Safe default: listen on `127.0.0.1` only.
 - Configurable CDN host/path rewrite rules with priority ordering, validation, and JSON import/export.
+- Offline URL Manager with exact URL-to-mirror mappings, optional Host/Cookie overrides, priorities and JSON import/export.
 
-The modern edition is an incremental port. Offline URL rules beyond exact local-file mappings, Wi-Fi helper functions and settings migration remain tracked for subsequent milestones.
+The modern edition is an incremental port. Wi-Fi helper functions and broader settings migration remain tracked for subsequent milestones.
 
 ## Requirements
 
