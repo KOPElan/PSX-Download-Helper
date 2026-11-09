@@ -130,6 +130,80 @@ public sealed class ProxyServerTests
         }
     }
 
+    [Fact]
+    public async Task LocalFileMappingHeadReturnsHeadersWithoutBody()
+    {
+        using var temp = new TemporaryDirectory();
+        var filePath = Path.Combine(temp.Path, "game.pkg");
+        var mappingPath = Path.Combine(temp.Path, "local-mappings.json");
+        await File.WriteAllTextAsync(filePath, "0123456789");
+        await File.WriteAllTextAsync(mappingPath, JsonSerializer.Serialize(new[]
+        {
+            new { Url = "http://downloads.example.test/game.pkg", FilePath = filePath }
+        }));
+
+        var proxy = new ProxyServer(mappingPath);
+        var proxyPort = GetFreePort();
+        await proxy.StartAsync(IPAddress.Loopback, proxyPort);
+        try
+        {
+            using var client = new TcpClient();
+            await client.ConnectAsync(IPAddress.Loopback, proxyPort);
+            var stream = client.GetStream();
+            var request = Encoding.ASCII.GetBytes(
+                "HEAD http://downloads.example.test/game.pkg HTTP/1.1\r\nHost: downloads.example.test\r\nConnection: close\r\n\r\n");
+            await stream.WriteAsync(request);
+            var response = await ReadToEndAsync(stream);
+
+            Assert.Contains("HTTP/1.1 200 OK", response, StringComparison.Ordinal);
+            Assert.Contains("Content-Length: 10", response, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("0123456789", response, StringComparison.Ordinal);
+        }
+        finally
+        {
+            await proxy.StopAsync();
+        }
+    }
+
+    [Theory]
+    [InlineData("Range: bytes=2-5,7-8\r\n", "200 OK", "0123456789")]
+    [InlineData("Range: bytes=2-5\r\nIf-Range: \"stale-validator\"\r\n", "200 OK", "0123456789")]
+    public async Task LocalFileMappingFallsBackToFullResponseForUnsupportedOrStaleRanges(
+        string rangeHeaders, string expectedStatus, string expectedBody)
+    {
+        using var temp = new TemporaryDirectory();
+        var filePath = Path.Combine(temp.Path, "game.pkg");
+        var mappingPath = Path.Combine(temp.Path, "local-mappings.json");
+        await File.WriteAllTextAsync(filePath, "0123456789");
+        await File.WriteAllTextAsync(mappingPath, JsonSerializer.Serialize(new[]
+        {
+            new { Url = "http://downloads.example.test/game.pkg", FilePath = filePath }
+        }));
+
+        var proxy = new ProxyServer(mappingPath);
+        var proxyPort = GetFreePort();
+        await proxy.StartAsync(IPAddress.Loopback, proxyPort);
+        try
+        {
+            using var client = new TcpClient();
+            await client.ConnectAsync(IPAddress.Loopback, proxyPort);
+            var stream = client.GetStream();
+            var request = Encoding.ASCII.GetBytes(
+                $"GET http://downloads.example.test/game.pkg HTTP/1.1\r\nHost: downloads.example.test\r\n{rangeHeaders}Connection: close\r\n\r\n");
+            await stream.WriteAsync(request);
+            var response = await ReadToEndAsync(stream);
+            var split = response.IndexOf("\r\n\r\n", StringComparison.Ordinal);
+            Assert.True(split >= 0, "Proxy response must contain an HTTP header terminator.");
+
+            Assert.Contains($"HTTP/1.1 {expectedStatus}", response[..split], StringComparison.Ordinal);
+            Assert.Equal(expectedBody, response[(split + 4)..]);
+        }
+        finally
+        {
+            await proxy.StopAsync();
+        }
+    }
+
     private static int GetFreePort()
     {
         using var listener = new TcpListener(IPAddress.Loopback, 0);

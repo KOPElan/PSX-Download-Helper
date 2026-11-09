@@ -65,7 +65,7 @@ internal sealed class LocalFileMap
 
         if (!string.IsNullOrWhiteSpace(rangeHeader) &&
             string.IsNullOrWhiteSpace(GetHeader(requestHeader, "If-Range")) &&
-            TryParseRange(rangeHeader, length, out offset, out count, out var satisfiable))
+            TryParseRange(rangeHeader, length, out var rangeOffset, out var rangeCount, out var satisfiable))
         {
             if (!satisfiable)
             {
@@ -75,6 +75,9 @@ internal sealed class LocalFileMap
                 _log($"LOCAL 416 {target.PathAndQuery}");
                 return true;
             }
+
+            offset = rangeOffset;
+            count = rangeCount;
             partial = true;
         }
 
