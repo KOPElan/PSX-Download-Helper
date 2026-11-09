@@ -17,6 +17,7 @@ internal sealed class MainForm : Form
     private readonly Button _offlineUrlsButton = new() { Text = "Offline URLs", AutoSize = true };
     private readonly OfflineUrlStore _offlineUrlStore = new();
     private readonly Button _wifiButton = new() { Text = "Wi-Fi helper", AutoSize = true };
+    private readonly Button _importSettingsButton = new() { Text = "Import legacy settings", AutoSize = true };
     private readonly Label _status = new() { Text = "Stopped", AutoSize = true, ForeColor = Color.Firebrick };
     private readonly ListBox _events = new() { Dock = DockStyle.Fill, HorizontalScrollbar = true };
 
@@ -66,6 +67,7 @@ internal sealed class MainForm : Form
         toolbar.Controls.Add(_cdnRulesButton);
         toolbar.Controls.Add(_offlineUrlsButton);
         toolbar.Controls.Add(_wifiButton);
+        toolbar.Controls.Add(_importSettingsButton);
         toolbar.Controls.Add(_status);
         _status.Margin = new Padding(12, 8, 0, 0);
         root.Controls.Add(toolbar, 0, 1);
@@ -94,14 +96,41 @@ internal sealed class MainForm : Form
             using var dialog = new WifiHelperForm();
             dialog.ShowDialog(this);
         };
+        _importSettingsButton.Click += (_, _) => ImportLegacySettings();
         _proxy.Log += AddLog;
         FormClosed += (_, _) => _ = _proxy.StopAsync();
 
         AddLog("Ready. The default address is loopback-only.");
+        AddLog($"Modern settings: {LegacySettingsMigration.ConfigPath}");
         AddLog($"Local URL mappings: {_proxy.LocalMappingsPath}");
         AddLog($"CDN rules: {_cdnRuleStore.ConfigPath}");
         AddLog($"Offline URL mappings: {_offlineUrlStore.ConfigPath}");
         AddLog("HTTPS uses CONNECT tunnelling; encrypted payloads are not inspected.");
+    }
+
+    private void ImportLegacySettings()
+    {
+        using var dialog = new OpenFileDialog
+        {
+            Title = "Select legacy PSX Download Helper app.config or user settings XML",
+            Filter = "XML configuration (*.config;*.xml)|*.config;*.xml|All files (*.*)|*.*"
+        };
+        if (dialog.ShowDialog(this) != DialogResult.OK)
+            return;
+
+        try
+        {
+            var imported = LegacySettingsMigration.Import(dialog.FileName);
+            _address.Text = imported.ListenAddress;
+            _port.Value = imported.Port;
+            AddLog($"Imported legacy settings. Listen={imported.ListenAddress}:{imported.Port}; language={imported.Language}; theme={imported.Theme}.");
+            AddLog("Legacy cookies and Wi-Fi passwords were deliberately excluded from migration.");
+            MessageBox.Show(this, $"Settings imported. Proxy: {imported.ListenAddress}:{imported.Port}\\nSaved to: {LegacySettingsMigration.ConfigPath}", "Migration complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(this, ex.Message, "Could not import settings", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     private async Task StartProxyAsync()
