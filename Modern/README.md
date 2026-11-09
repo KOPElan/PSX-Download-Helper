@@ -112,6 +112,10 @@ after local-file mappings and before CDN rewrites. HTTPS requests use CONNECT
 tunnelling and cannot be rewritten without decrypting TLS; this project does
 not intercept TLS. Only use mirror URLs and cookies that you trust.
 
+## CI validation
+
+The .NET 10 solution built successfully on GitHub Actions in run [#42668994505](https://github.com/meicamghe/PSX-Download-Helper/actions/runs/42668994505) for the 2.3.0 offline URL manager milestone.
+
 ## Architecture roadmap
 
 1. Core proxy lifecycle, cancellation and structured request events.
