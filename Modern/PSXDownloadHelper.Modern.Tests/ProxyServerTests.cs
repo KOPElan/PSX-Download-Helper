@@ -204,6 +204,78 @@ public sealed class ProxyServerTests
         }
     }
 
+    [Theory]
+    [InlineData("bytes=invalid")]
+    [InlineData("bytes=8-3")]
+    [InlineData("items=0-2")]
+    public async Task LocalFileMappingIgnoresMalformedRanges(string range)
+    {
+        using var temp = new TemporaryDirectory();
+        var filePath = Path.Combine(temp.Path, "game.pkg");
+        var mappingPath = Path.Combine(temp.Path, "local-mappings.json");
+        await File.WriteAllTextAsync(filePath, "0123456789");
+        await File.WriteAllTextAsync(mappingPath, JsonSerializer.Serialize(new[]
+        {
+            new { Url = "http://downloads.example.test/game.pkg", FilePath = filePath }
+        }));
+
+        var proxy = new ProxyServer(mappingPath);
+        var proxyPort = GetFreePort();
+        await proxy.StartAsync(IPAddress.Loopback, proxyPort);
+        try
+        {
+            using var client = new TcpClient();
+            await client.ConnectAsync(IPAddress.Loopback, proxyPort);
+            var stream = client.GetStream();
+            var request = Encoding.ASCII.GetBytes(
+                $"GET http://downloads.example.test/game.pkg HTTP/1.1\r\nHost: downloads.example.test\r\nRange: {range}\r\nConnection: close\r\n\r\n");
+            await stream.WriteAsync(request);
+            var response = await ReadToEndAsync(stream);
+            var split = response.IndexOf("\r\n\r\n", StringComparison.Ordinal);
+            Assert.True(split >= 0, "Proxy response must contain an HTTP header terminator.");
+
+            Assert.Contains("HTTP/1.1 200 OK", response[..split], StringComparison.Ordinal);
+            Assert.Equal("0123456789", response[(split + 4)..]);
+        }
+        finally
+        {
+            await proxy.StopAsync();
+        }
+    }
+
+    [Fact]
+    public async Task LocalFileMappingReturns404WhenMappedFileIsMissing()
+    {
+        using var temp = new TemporaryDirectory();
+        var missingFilePath = Path.Combine(temp.Path, "missing.pkg");
+        var mappingPath = Path.Combine(temp.Path, "local-mappings.json");
+        await File.WriteAllTextAsync(mappingPath, JsonSerializer.Serialize(new[]
+        {
+            new { Url = "http://downloads.example.test/missing.pkg", FilePath = missingFilePath }
+        }));
+
+        var proxy = new ProxyServer(mappingPath);
+        var proxyPort = GetFreePort();
+        await proxy.StartAsync(IPAddress.Loopback, proxyPort);
+        try
+        {
+            using var client = new TcpClient();
+            await client.ConnectAsync(IPAddress.Loopback, proxyPort);
+            var stream = client.GetStream();
+            var request = Encoding.ASCII.GetBytes(
+                "GET http://downloads.example.test/missing.pkg HTTP/1.1\r\nHost: downloads.example.test\r\nConnection: close\r\n\r\n");
+            await stream.WriteAsync(request);
+            var response = await ReadToEndAsync(stream);
+
+            Assert.Contains("HTTP/1.1 404 Mapped local file not found", response, StringComparison.Ordinal);
+            Assert.Contains("Mapped local file not found", response, StringComparison.Ordinal);
+        }
+        finally
+        {
+            await proxy.StopAsync();
+        }
+    }
+
     private static int GetFreePort()
     {
         using var listener = new TcpListener(IPAddress.Loopback, 0);

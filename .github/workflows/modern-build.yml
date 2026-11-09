@@ -18,6 +18,7 @@ permissions:
 jobs:
   build:
     runs-on: windows-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -26,4 +27,5 @@ jobs:
       - name: Build modern solution
         run: dotnet build Modern/PSXDownloadHelper.Modern.sln --configuration Release
       - name: Run modern integration tests
-        run: dotnet test Modern/PSXDownloadHelper.Modern.Tests/PSXDownloadHelper.Modern.Tests.csproj --configuration Release
+        timeout-minutes: 7
+        run: dotnet test Modern/PSXDownloadHelper.Modern.Tests/PSXDownloadHelper.Modern.Tests.csproj --configuration Release --blame-hang-timeout 5m --logger "console;verbosity=detailed"
