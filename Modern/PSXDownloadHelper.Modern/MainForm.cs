@@ -127,7 +127,7 @@ internal sealed class MainForm : Form
             return;
         if (InvokeRequired)
         {
-            try { BeginInvoke(() => AddLog(message)); }
+            try { BeginInvoke(new Action(() => AddLog(message))); }
             catch (InvalidOperationException) { }
             return;
         }
