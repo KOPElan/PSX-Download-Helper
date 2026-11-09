@@ -4,7 +4,7 @@ A separate modernization track for the original PSX Download Helper. The
 original .NET Framework 4.0 solution remains under `PSXDownloadHelper/` and
 is not modified by this edition.
 
-## Current status — 2.4.0
+## Current status — 2.5.0
 
 - New Windows Forms application targeting .NET 10.
 - Async local TCP proxy listener.
@@ -129,3 +129,10 @@ The .NET 10 solution built successfully on GitHub Actions in run [#42668994505](
 
 This derivative follows the repository's GPL-3.0 license. See the root
 `LICENSE` file and retain upstream attribution.
+
+
+## Legacy settings migration — 2.5.0
+
+The main window can import the legacy `app.config` / user-settings XML through **Import legacy settings**. The importer reads the legacy proxy listen address and port (falling back to loopback and port 8080 when invalid), and preserves language, theme and selected feature flags in `%LOCALAPPDATA%\\PSXDownloadHelper\\settings.json`. Cookie values and the legacy Wi-Fi access-point password are intentionally excluded; they are credentials and are not migrated. The importer does not automatically enable legacy CDN/offline behavior: existing CDN and Offline URL managers remain independently controlled.
+
+The import action is explicit and does not overwrite the source XML. Review the imported address before starting the proxy; non-loopback listeners can expose the proxy to other devices on the network.
