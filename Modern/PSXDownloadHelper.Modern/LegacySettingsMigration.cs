@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text.Json;
 using System.Xml;
 using System.Xml.Linq;
@@ -79,10 +80,7 @@ internal static class LegacySettingsMigration
             var key = (string?)element.Attribute("key")
                       ?? (string?)element.Attribute("name")
                       ?? element.Name.LocalName;
-            var value = (string?)element.Attribute("value")
-                        ?? (string?)element.Attribute("serializeAs") is not null
-                            ? element.Value
-                            : element.Value;
+            var value = (string?)element.Attribute("value") ?? element.Value;
             if (string.IsNullOrWhiteSpace(key) || IsSensitiveKey(key))
                 continue;
 
