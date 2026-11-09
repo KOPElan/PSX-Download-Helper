@@ -23,7 +23,8 @@ internal sealed class ProxyServer
 
     public event Action<string>? Log;
 
-    public ProxyServer() => _localFileMap = new LocalFileMap(message => Log?.Invoke(message));
+    public ProxyServer(string? localMappingsPath = null) =>
+        _localFileMap = new LocalFileMap(message => Log?.Invoke(message), localMappingsPath);
 
     public bool IsRunning => _listener is not null;
 
