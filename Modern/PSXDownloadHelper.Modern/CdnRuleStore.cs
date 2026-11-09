@@ -4,13 +4,17 @@ namespace PSXDownloadHelper.Modern;
 
 internal sealed class CdnRuleStore
 {
-    private readonly string _path = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "PSXDownloadHelper", "cdn-rules.json");
+    private readonly string _path;
 
     public string ConfigPath => _path;
 
-    public CdnRuleStore() => EnsureConfig();
+    public CdnRuleStore(string? configPath = null)
+    {
+        _path = configPath ?? Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "PSXDownloadHelper", "cdn-rules.json");
+        EnsureConfig();
+    }
 
     public List<CdnRule> Load()
     {
