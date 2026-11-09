@@ -65,8 +65,10 @@ to an existing local file:
 A matching GET or HEAD request is served locally without contacting the remote
 server. GET supports one byte range, including open-ended and suffix ranges,
 and returns `206 Partial Content`, `Content-Range`, and `Accept-Ranges`.
-Unsatisfiable or unsupported multi-range requests return `416`. HEAD returns
-headers only. The mapping uses an explicit local file path; URL path segments
+Unsatisfiable single ranges return `416`; malformed or multi-range requests
+are ignored and receive a full `200` response. `If-Range` currently falls back
+to a full response because validators are not yet emitted. HEAD returns headers
+only. The mapping uses an explicit local file path; URL path segments
 are never appended to that path. The file path must be readable by the current
 Windows user.
 
