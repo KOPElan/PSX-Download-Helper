@@ -77,6 +77,41 @@ CONNECT remains an opaque TLS tunnel, so HTTPS URLs cannot be mapped or
 inspected without TLS interception; this project intentionally does not add
 certificate interception.
 
+## Offline URL mappings
+
+Open **Offline URLs** from the main window. The rules are stored at:
+
+`%LOCALAPPDATA%\\PSXDownloadHelper\\offline-urls.json`
+
+Each rule maps one exact HTTP URL to another HTTP mirror URL. Optional
+`hostHeader` and `cookie` fields reproduce the legacy offline-request
+behavior where a mirror expects a specific Host header or Cookie value.
+Higher priority rules are checked first; matching is exact for scheme, host,
+port, path and query string (path matching is case-sensitive).
+
+Example:
+
+```json
+[
+  {
+    "enabled": true,
+    "name": "Example game mirror",
+    "sourceUrl": "http://download.example.com/game.pkg?region=eu",
+    "targetUrl": "http://mirror.example.net/files/game.pkg?region=eu",
+    "hostHeader": "",
+    "cookie": "",
+    "priority": 100
+  }
+]
+```
+
+The optional Cookie value is sent only when configured and replaces any
+existing Cookie header for that request. Treat this configuration as sensitive
+if it contains session cookies. Rules are applied to cleartext HTTP requests
+after local-file mappings and before CDN rewrites. HTTPS requests use CONNECT
+tunnelling and cannot be rewritten without decrypting TLS; this project does
+not intercept TLS. Only use mirror URLs and cookies that you trust.
+
 ## Architecture roadmap
 
 1. Core proxy lifecycle, cancellation and structured request events.
