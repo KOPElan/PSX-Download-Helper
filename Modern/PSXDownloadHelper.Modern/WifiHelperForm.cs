@@ -43,10 +43,10 @@ internal sealed class WifiHelperForm : Form
         root.Controls.Add(actions, 0, 2);
         root.Controls.Add(_output, 0, 3);
 
-        _check.Click += async (_, _) => await ExecuteAsync(WifiHostedNetwork.GetDriverStatusAsync);
+        _check.Click += async (_, _) => await ExecuteAsync(() => WifiHostedNetwork.GetDriverStatusAsync());
         _configure.Click += async (_, _) => await ExecuteAsync(() => WifiHostedNetwork.ConfigureAsync(_ssid.Text, _password.Text));
-        _start.Click += async (_, _) => await ExecuteAsync(WifiHostedNetwork.StartAsync);
-        _stop.Click += async (_, _) => await ExecuteAsync(WifiHostedNetwork.StopAsync);
+        _start.Click += async (_, _) => await ExecuteAsync(() => WifiHostedNetwork.StartAsync());
+        _stop.Click += async (_, _) => await ExecuteAsync(() => WifiHostedNetwork.StopAsync());
 
         Shown += async (_, _) => await ExecuteAsync(WifiHostedNetwork.GetDriverStatusAsync);
     }
