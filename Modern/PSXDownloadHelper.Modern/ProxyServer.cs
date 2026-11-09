@@ -15,6 +15,7 @@ internal sealed class ProxyServer
     private readonly ConcurrentDictionary<int, TcpClient> _clients = new();
     private readonly LocalFileMap _localFileMap;
     private readonly CdnRuleStore _cdnRules = new();
+    private readonly OfflineUrlStore _offlineUrls = new();
     private TcpListener? _listener;
     private CancellationTokenSource? _shutdown;
     private Task? _acceptLoop;
@@ -27,6 +28,8 @@ internal sealed class ProxyServer
     public bool IsRunning => _listener is not null;
 
     public string LocalMappingsPath => _localFileMap.ConfigPath;
+
+    public string OfflineUrlsPath => _offlineUrls.ConfigPath;
 
     public Task StartAsync(IPAddress address, int port)
     {
@@ -135,10 +138,20 @@ internal sealed class ProxyServer
                 if (await _localFileMap.TryServeAsync(target, parts[0], headerText, clientStream, linked.Token).ConfigureAwait(false))
                     return;
 
-                var originalTarget = target;
+                string? offlineHostHeader = null;
+                string? offlineCookie = null;
+                if (_offlineUrls.TryRewrite(target, out var offlineRule, out var offlineTarget) && offlineRule is not null)
+                {
+                    Log?.Invoke($"Offline URL rule '{offlineRule.Name}': {target} -> {offlineTarget}");
+                    target = offlineTarget;
+                    offlineHostHeader = string.IsNullOrWhiteSpace(offlineRule.HostHeader) ? null : offlineRule.HostHeader;
+                    offlineCookie = string.IsNullOrWhiteSpace(offlineRule.Cookie) ? null : offlineRule.Cookie;
+                }
+
+                var beforeCdnTarget = target;
                 target = _cdnRules.Rewrite(target, out var matchedRule);
                 if (matchedRule is not null)
-                    Log?.Invoke($"CDN rule '{matchedRule}': {originalTarget.Host}{originalTarget.AbsolutePath} -> {target.Host}{target.AbsolutePath}");
+                    Log?.Invoke($"CDN rule '{matchedRule}': {beforeCdnTarget.Host}{beforeCdnTarget.AbsolutePath} -> {target.Host}{target.AbsolutePath}");
 
                 var transferEncoding = GetHeaderValue(headerText, "Transfer-Encoding");
                 if (!string.IsNullOrWhiteSpace(transferEncoding) &&
@@ -159,7 +172,7 @@ internal sealed class ProxyServer
                 await upstream.ConnectAsync(target.Host, target.Port, linked.Token).ConfigureAwait(false);
                 var upstreamStream = upstream.GetStream();
 
-                var rewrittenHeader = RewriteRequestHeader(headerText, target, parts[0], parts[2]);
+                var rewrittenHeader = RewriteRequestHeader(headerText, target, parts[0], parts[2], offlineHostHeader, offlineCookie);
                 var bytes = Encoding.ASCII.GetBytes(rewrittenHeader);
                 await upstreamStream.WriteAsync(bytes, linked.Token).ConfigureAwait(false);
 
@@ -247,10 +260,12 @@ internal sealed class ProxyServer
         }
     }
 
-    private static string RewriteRequestHeader(string rawHeader, Uri target, string method, string version)
+    private static string RewriteRequestHeader(string rawHeader, Uri target, string method, string version,
+        string? hostOverride, string? cookieOverride)
     {
         var lines = rawHeader.Split("\r\n", StringSplitOptions.None);
         var builder = new StringBuilder();
+        var hostWritten = false;
         builder.Append(method).Append(' ')
             .Append(string.IsNullOrEmpty(target.PathAndQuery) ? "/" : target.PathAndQuery)
             .Append(' ').Append(version).Append("\r\n");
@@ -269,12 +284,19 @@ internal sealed class ProxyServer
                 continue;
             if (name.Equals("Host", StringComparison.OrdinalIgnoreCase))
             {
-                builder.Append("Host: ").Append(target.Authority).Append("\r\n");
+                builder.Append("Host: ").Append(hostOverride ?? target.Authority).Append("\r\n");
+                hostWritten = true;
                 continue;
             }
+            if (name.Equals("Cookie", StringComparison.OrdinalIgnoreCase) && cookieOverride is not null)
+                continue;
             builder.Append(line).Append("\r\n");
         }
 
+        if (!hostWritten)
+            builder.Append("Host: ").Append(hostOverride ?? target.Authority).Append("\r\n");
+        if (cookieOverride is not null)
+            builder.Append("Cookie: ").Append(cookieOverride).Append("\r\n");
         builder.Append("Connection: close\r\n\r\n");
         return builder.ToString();
     }
