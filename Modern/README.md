@@ -4,7 +4,7 @@ A separate modernization track for the original PSX Download Helper. The
 original .NET Framework 4.0 solution remains under `PSXDownloadHelper/` and
 is not modified by this edition.
 
-## Current status — 2.0.0 foundation
+## Current status — 2.1.0
 
 - New Windows Forms application targeting .NET 10.
 - Async local TCP proxy listener.
