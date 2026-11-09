@@ -10,8 +10,8 @@ namespace PSXDownloadHelper.Modern.Tests;
 public sealed class ProxyServerTests
 {
     [Theory]
-    [InlineData("Content-Length: 0\r\nContent-Length: 4\r\n", "400 Bad Request")]
-    [InlineData("Content-Length: 0, 4\r\n", "400 Bad Request")]
+    [InlineData("Content-Length: 0\r\nContent-Length: 4\r\n", "400 Invalid Content-Length")]
+    [InlineData("Content-Length: 0, 4\r\n", "400 Invalid Content-Length")]
     public async Task RejectsAmbiguousContentLengthHeaders(string contentLengthHeaders, string expectedStatus)
     {
         var proxy = new ProxyServer();
