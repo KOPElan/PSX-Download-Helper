@@ -13,6 +13,7 @@ internal sealed class ProxyServer
 {
     private const int MaxHeaderBytes = 64 * 1024;
     private readonly ConcurrentDictionary<int, TcpClient> _clients = new();
+    private readonly LocalFileMap _localFileMap = new(message => Log?.Invoke(message));
     private TcpListener? _listener;
     private CancellationTokenSource? _shutdown;
     private Task? _acceptLoop;
@@ -125,6 +126,9 @@ internal sealed class ProxyServer
                     await WriteErrorAsync(clientStream, 400, "Expected an absolute http:// URL or CONNECT", linked.Token).ConfigureAwait(false);
                     return;
                 }
+
+                if (await _localFileMap.TryServeAsync(target, parts[0], headerText, clientStream, linked.Token).ConfigureAwait(false))
+                    return;
 
                 Log?.Invoke($"HTTP {target.Host}:{target.Port} {target.PathAndQuery}");
                 using var upstream = new TcpClient();
