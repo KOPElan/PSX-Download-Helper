@@ -50,3 +50,12 @@ PSX Download Helper 是一个基于 **.NET Framework 4.0** 的 Windows 桌面工
 ## 隐私说明
 
 隐私政策文件：`/home/runner/work/PSX-Download-Helper/PSX-Download-Helper/privacy-policy.md`
+
+## نسخه‌های توسعه
+
+برای حفظ سازگاری، دو مسیر توسعه مستقل نگهداری می‌شوند:
+
+- **نسخه قدیمی (.NET Framework 4.0):** همان برنامه اصلی و Solution موجود؛ راهنما در [LEGACY_MAINTENANCE.md](LEGACY_MAINTENANCE.md).
+- **نسخه مدرن (.NET 10):** برنامه مستقل ویندوزی در پوشه [Modern](Modern/README.md)، با Solution و فرایند Build جداگانه.
+
+نسخه مدرن هنوز در حال انتقال قابلیت‌هاست؛ وضعیت واقعی هر قابلیت و نقشه راه در README همان نسخه ثبت می‌شود. هیچ‌یک از قابلیت‌های منتقل‌نشده به‌عنوان کامل معرفی نمی‌شوند.
