@@ -57,7 +57,7 @@ to an existing local file:
 [
   {
     "url": "http://example.com/game.pkg",
-    "filePath": "C:\\\\PSXOffline\\\\game.pkg"
+    "filePath": "C:\\PSXOffline\\game.pkg"
   }
 ]
 ```
