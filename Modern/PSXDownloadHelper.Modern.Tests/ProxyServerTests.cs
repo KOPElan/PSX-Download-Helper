@@ -151,7 +151,7 @@ public sealed class ProxyServerTests
             await client.ConnectAsync(IPAddress.Loopback, proxyPort);
             var stream = client.GetStream();
             var request = Encoding.ASCII.GetBytes(
-                "HEAD http://downloads.example.test/game.pkg HTTP/1.1\\r\\nHost: downloads.example.test\\r\\nConnection: close\\r\\n\\r\\n");
+                "HEAD http://downloads.example.test/game.pkg HTTP/1.1\r\nHost: downloads.example.test\r\nConnection: close\r\n\r\n");
             await stream.WriteAsync(request);
             var response = await ReadToEndAsync(stream);
 
@@ -166,8 +166,8 @@ public sealed class ProxyServerTests
     }
 
     [Theory]
-    [InlineData("Range: bytes=2-5\\r\\n", "200 OK", "0123456789")]
-    [InlineData("Range: bytes=2-5\\r\\nIf-Range: \\"stale-validator\\"\\r\\n", "200 OK", "0123456789")]
+    [InlineData("Range: bytes=2-5,7-8\r\n", "200 OK", "0123456789")]
+    [InlineData("Range: bytes=2-5\r\nIf-Range: \"stale-validator\"\r\n", "200 OK", "0123456789")]
     public async Task LocalFileMappingFallsBackToFullResponseForUnsupportedOrStaleRanges(
         string rangeHeaders, string expectedStatus, string expectedBody)
     {
@@ -189,10 +189,10 @@ public sealed class ProxyServerTests
             await client.ConnectAsync(IPAddress.Loopback, proxyPort);
             var stream = client.GetStream();
             var request = Encoding.ASCII.GetBytes(
-                $"GET http://downloads.example.test/game.pkg HTTP/1.1\\r\\nHost: downloads.example.test\\r\\n{rangeHeaders}Connection: close\\r\\n\\r\\n");
+                $"GET http://downloads.example.test/game.pkg HTTP/1.1\r\nHost: downloads.example.test\r\n{rangeHeaders}Connection: close\r\n\r\n");
             await stream.WriteAsync(request);
             var response = await ReadToEndAsync(stream);
-            var split = response.IndexOf("\\r\\n\\r\\n", StringComparison.Ordinal);
+            var split = response.IndexOf("\r\n\r\n", StringComparison.Ordinal);
             Assert.True(split >= 0, "Proxy response must contain an HTTP header terminator.");
 
             Assert.Contains($"HTTP/1.1 {expectedStatus}", response[..split], StringComparison.Ordinal);
