@@ -1,5 +1,7 @@
 # PSX Download Helper
 
+**زبان‌ها:** [فارسی](README.fa.md) | [English](README.md)
+
 PSX Download Helper 是一个基于 **.NET Framework 4.0** 的 Windows 桌面工具，核心能力是通过本地代理监听与 URL 替换能力，协助处理 PSX 相关下载链路。
 
 ## 主要功能
@@ -50,3 +52,24 @@ PSX Download Helper 是一个基于 **.NET Framework 4.0** 的 Windows 桌面工
 ## 隐私说明
 
 隐私政策文件：`/home/runner/work/PSX-Download-Helper/PSX-Download-Helper/privacy-policy.md`
+
+## نسخه‌های توسعه
+
+برای حفظ سازگاری، دو مسیر توسعه مستقل نگهداری می‌شوند:
+
+- **نسخه قدیمی (.NET Framework 4.0):** همان برنامه اصلی و Solution موجود؛ راهنما در [LEGACY_MAINTENANCE.md](LEGACY_MAINTENANCE.md).
+- **نسخه مدرن (.NET 10):** برنامه مستقل ویندوزی در پوشه [Modern](Modern/README.md)، با Solution و فرایند Build جداگانه.
+
+نسخه مدرن هنوز در حال انتقال قابلیت‌هاست؛ وضعیت واقعی هر قابلیت و نقشه راه در README همان نسخه ثبت می‌شود. هیچ‌یک از قابلیت‌های منتقل‌نشده به‌عنوان کامل معرفی نمی‌شوند.
+
+
+## Modern edition
+
+An independent .NET 10 Windows Forms modernization is being developed in
+`Modern/`, while the original .NET Framework 4.0 solution remains preserved.
+
+The modern branch currently includes an asynchronous HTTP proxy, opaque HTTPS
+CONNECT tunnelling, local URL-to-file mappings with byte-range support, CDN
+rewrite rules, and an Offline URL Manager with legacy `DataHistory.xml`
+import. See [Modern/README.md](Modern/README.md) for setup, configuration,
+protocol limitations and build instructions.
