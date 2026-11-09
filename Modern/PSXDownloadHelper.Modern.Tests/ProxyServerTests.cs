@@ -228,10 +228,10 @@ public sealed class ProxyServerTests
             await client.ConnectAsync(IPAddress.Loopback, proxyPort);
             var stream = client.GetStream();
             var request = Encoding.ASCII.GetBytes(
-                $"GET http://downloads.example.test/game.pkg HTTP/1.1\\r\\nHost: downloads.example.test\\r\\nRange: {range}\\r\\nConnection: close\\r\\n\\r\\n");
+                $"GET http://downloads.example.test/game.pkg HTTP/1.1\r\nHost: downloads.example.test\r\nRange: {range}\r\nConnection: close\r\n\r\n");
             await stream.WriteAsync(request);
             var response = await ReadToEndAsync(stream);
-            var split = response.IndexOf("\\r\\n\\r\\n", StringComparison.Ordinal);
+            var split = response.IndexOf("\r\n\r\n", StringComparison.Ordinal);
             Assert.True(split >= 0, "Proxy response must contain an HTTP header terminator.");
 
             Assert.Contains("HTTP/1.1 200 OK", response[..split], StringComparison.Ordinal);
@@ -263,7 +263,7 @@ public sealed class ProxyServerTests
             await client.ConnectAsync(IPAddress.Loopback, proxyPort);
             var stream = client.GetStream();
             var request = Encoding.ASCII.GetBytes(
-                "GET http://downloads.example.test/missing.pkg HTTP/1.1\\r\\nHost: downloads.example.test\\r\\nConnection: close\\r\\n\\r\\n");
+                "GET http://downloads.example.test/missing.pkg HTTP/1.1\r\nHost: downloads.example.test\r\nConnection: close\r\n\r\n");
             await stream.WriteAsync(request);
             var response = await ReadToEndAsync(stream);
 
