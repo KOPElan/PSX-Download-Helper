@@ -9,6 +9,50 @@ namespace PSXDownloadHelper.Modern.Tests;
 
 public sealed class ProxyServerTests
 {
+    [Fact]
+    public async Task Returns408WhenClientDoesNotCompleteRequestHeaders()
+    {
+        var proxy = new ProxyServer(headerTimeout: TimeSpan.FromMilliseconds(150));
+        var proxyPort = GetFreePort();
+        await proxy.StartAsync(IPAddress.Loopback, proxyPort);
+        try
+        {
+            using var client = new TcpClient();
+            await client.ConnectAsync(IPAddress.Loopback, proxyPort);
+            var response = await ReadToEndAsync(client.GetStream()).WaitAsync(TimeSpan.FromSeconds(3));
+
+            Assert.Contains("HTTP/1.1 408 Request Header Timeout", response, StringComparison.Ordinal);
+        }
+        finally
+        {
+            await proxy.StopAsync();
+        }
+    }
+
+    [Fact]
+    public async Task Returns502WhenUpstreamConnectionIsRefused()
+    {
+        var proxy = new ProxyServer();
+        var proxyPort = GetFreePort();
+        await proxy.StartAsync(IPAddress.Loopback, proxyPort);
+        try
+        {
+            using var client = new TcpClient();
+            await client.ConnectAsync(IPAddress.Loopback, proxyPort);
+            var request = Encoding.ASCII.GetBytes(
+                "GET http://127.0.0.1:1/unavailable HTTP/1.1\\r\\n" +
+                "Host: 127.0.0.1:1\\r\\nConnection: close\\r\\n\\r\\n");
+            await client.GetStream().WriteAsync(request);
+
+            var response = await ReadToEndAsync(client.GetStream()).WaitAsync(TimeSpan.FromSeconds(3));
+            Assert.Contains("HTTP/1.1 502 Bad Gateway", response, StringComparison.Ordinal);
+        }
+        finally
+        {
+            await proxy.StopAsync();
+        }
+    }
+
     [Theory]
     [InlineData("Content-Length: 0\r\nContent-Length: 4\r\n", "400 Invalid Content-Length")]
     [InlineData("Content-Length: 0, 4\r\n", "400 Invalid Content-Length")]
