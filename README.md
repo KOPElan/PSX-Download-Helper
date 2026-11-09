@@ -1,5 +1,7 @@
 # PSX Download Helper
 
+**زبان‌ها:** [فارسی](README.fa.md) | [English](README.md)
+
 PSX Download Helper 是一个基于 **.NET Framework 4.0** 的 Windows 桌面工具，核心能力是通过本地代理监听与 URL 替换能力，协助处理 PSX 相关下载链路。
 
 ## 主要功能
