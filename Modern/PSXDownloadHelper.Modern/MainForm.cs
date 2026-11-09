@@ -12,6 +12,8 @@ internal sealed class MainForm : Form
     private readonly NumericUpDown _port = new() { Minimum = 1, Maximum = 65535, Value = 8080, Width = 90 };
     private readonly Button _start = new() { Text = "Start proxy", AutoSize = true };
     private readonly Button _stop = new() { Text = "Stop", AutoSize = true, Enabled = false };
+    private readonly Button _cdnRulesButton = new() { Text = "CDN rules", AutoSize = true };
+    private readonly CdnRuleStore _cdnRuleStore = new();
     private readonly Label _status = new() { Text = "Stopped", AutoSize = true, ForeColor = Color.Firebrick };
     private readonly ListBox _events = new() { Dock = DockStyle.Fill, HorizontalScrollbar = true };
 
@@ -58,6 +60,7 @@ internal sealed class MainForm : Form
         toolbar.Controls.Add(_port);
         toolbar.Controls.Add(_start);
         toolbar.Controls.Add(_stop);
+        toolbar.Controls.Add(_cdnRulesButton);
         toolbar.Controls.Add(_status);
         _status.Margin = new Padding(12, 8, 0, 0);
         root.Controls.Add(toolbar, 0, 1);
@@ -71,11 +74,17 @@ internal sealed class MainForm : Form
 
         _start.Click += async (_, _) => await StartProxyAsync();
         _stop.Click += async (_, _) => await StopProxyAsync();
+        _cdnRulesButton.Click += (_, _) =>
+        {
+            using var dialog = new CdnRulesForm(_cdnRuleStore);
+            dialog.ShowDialog(this);
+        };
         _proxy.Log += AddLog;
         FormClosed += (_, _) => _ = _proxy.StopAsync();
 
         AddLog("Ready. The default address is loopback-only.");
         AddLog($"Local URL mappings: {_proxy.LocalMappingsPath}");
+        AddLog($"CDN rules: {_cdnRuleStore.ConfigPath}");
         AddLog("HTTPS uses CONNECT tunnelling; encrypted payloads are not inspected.");
     }
 
