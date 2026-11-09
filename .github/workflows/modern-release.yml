@@ -1,0 +1,96 @@
+name: Modern .NET release
+
+on:
+  push:
+    branches: ["feature/modern-dotnet10"]
+    tags: ["modern-v*"]
+    paths-ignore:
+      - "**.md"
+      - "LICENSE"
+  pull_request:
+    paths:
+      - "Modern/**"
+      - ".github/workflows/modern-build.yml"
+      - ".github/workflows/modern-release.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-package:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Build solution
+        run: dotnet build Modern/PSXDownloadHelper.Modern.sln --configuration Release
+
+      - name: Run integration tests
+        timeout-minutes: 7
+        run: dotnet test Modern/PSXDownloadHelper.Modern.Tests/PSXDownloadHelper.Modern.Tests.csproj --configuration Release --no-build --blame-hang-timeout 5m --logger "console;verbosity=detailed"
+
+      - name: Publish self-contained Windows x64 application
+        shell: pwsh
+        run: |
+          $project = "Modern/PSXDownloadHelper.Modern/PSXDownloadHelper.Modern.csproj"
+          [xml]$projectXml = Get-Content $project -Raw
+          $version = $projectXml.Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
+          if (-not $version) { throw "Could not determine application version from the project file." }
+
+          $packageRoot = Join-Path $env:RUNNER_TEMP "PSXDownloadHelper-Modern"
+          $artifactRoot = Join-Path $env:GITHUB_WORKSPACE "artifacts"
+          New-Item -ItemType Directory -Force -Path $packageRoot, $artifactRoot | Out-Null
+
+          dotnet publish $project --configuration Release --runtime win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false --output $packageRoot
+          if ($LASTEXITCODE -ne 0) { throw "dotnet publish failed." }
+
+          $appExecutable = Join-Path $packageRoot "PSXDownloadHelper.Modern.exe"
+          if (-not (Test-Path $appExecutable)) { throw "Published application executable was not found." }
+
+          Copy-Item "Modern/README.md" (Join-Path $packageRoot "README.md")
+          Copy-Item "LICENSE" (Join-Path $packageRoot "LICENSE")
+
+          $archiveName = "PSXDownloadHelper-Modern-$version-win-x64.zip"
+          $archivePath = Join-Path $artifactRoot $archiveName
+          Compress-Archive -Path (Join-Path $packageRoot "*") -DestinationPath $archivePath -CompressionLevel Optimal
+
+          $hash = (Get-FileHash $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$hash  $archiveName" | Set-Content (Join-Path $artifactRoot "SHA256SUMS.txt") -Encoding ascii
+
+      - name: Upload release package
+        uses: actions/upload-artifact@v4
+        with:
+          name: modern-windows-x64-package
+          path: artifacts/*
+          if-no-files-found: error
+          retention-days: 30
+
+  publish-github-release:
+    if: startsWith(github.ref, 'refs/tags/modern-v')
+    needs: build-test-package
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download packaged application
+        uses: actions/download-artifact@v4
+        with:
+          name: modern-windows-x64-package
+          path: artifacts
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $archive = Get-ChildItem "artifacts/PSXDownloadHelper-Modern-*-win-x64.zip" | Select-Object -First 1
+          $checksum = "artifacts/SHA256SUMS.txt"
+          if (-not $archive -or -not (Test-Path $checksum)) { throw "Release package or checksum is missing." }
+          gh release create $tag $archive.FullName $checksum --title "PSX Download Helper Modern $tag" --generate-notes
