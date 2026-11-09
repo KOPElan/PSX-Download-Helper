@@ -58,9 +58,11 @@ internal sealed class LocalFileMap
         long count = length;
         var partial = false;
 
-        if (!string.IsNullOrWhiteSpace(rangeHeader))
+        if (!string.IsNullOrWhiteSpace(rangeHeader) &&
+            string.IsNullOrWhiteSpace(GetHeader(requestHeader, "If-Range")) &&
+            TryParseRange(rangeHeader, length, out offset, out count, out var satisfiable))
         {
-            if (!TryParseRange(rangeHeader, length, out offset, out count))
+            if (!satisfiable)
             {
                 var invalid = Encoding.ASCII.GetBytes(
                     $"HTTP/1.1 416 Range Not Satisfiable\r\nAccept-Ranges: bytes\r\nContent-Range: bytes */{length}\r\nContent-Length: 0\r\nConnection: close\r\n\r\n");
@@ -157,11 +159,12 @@ internal sealed class LocalFileMap
         return null;
     }
 
-    private static bool TryParseRange(string header, long length, out long offset, out long count)
+    private static bool TryParseRange(string header, long length, out long offset, out long count, out bool satisfiable)
     {
         offset = 0;
         count = 0;
-        if (!header.StartsWith("bytes=", StringComparison.OrdinalIgnoreCase) || header.Contains(',') || length <= 0)
+        satisfiable = false;
+        if (!header.StartsWith("bytes=", StringComparison.OrdinalIgnoreCase) || header.Contains(','))
             return false;
 
         var spec = header[6..].Trim();
@@ -173,20 +176,27 @@ internal sealed class LocalFileMap
         var last = spec[(dash + 1)..].Trim();
         if (first.Length == 0)
         {
-            if (!long.TryParse(last, out var suffixLength) || suffixLength <= 0)
+            if (!long.TryParse(last, out var suffixLength))
                 return false;
+            if (suffixLength <= 0 || length <= 0)
+                return true;
             count = Math.Min(suffixLength, length);
             offset = length - count;
+            satisfiable = true;
             return true;
         }
 
-        if (!long.TryParse(first, out offset) || offset < 0 || offset >= length)
+        if (!long.TryParse(first, out offset) || offset < 0)
             return false;
         var end = length - 1;
         if (last.Length > 0 && (!long.TryParse(last, out end) || end < offset))
             return false;
+        if (length <= 0 || offset >= length)
+            return true;
+
         end = Math.Min(end, length - 1);
         count = end - offset + 1;
+        satisfiable = true;
         return true;
     }
 
