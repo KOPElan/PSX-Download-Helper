@@ -16,6 +16,7 @@ internal sealed class MainForm : Form
     private readonly CdnRuleStore _cdnRuleStore = new();
     private readonly Button _offlineUrlsButton = new() { Text = "Offline URLs", AutoSize = true };
     private readonly OfflineUrlStore _offlineUrlStore = new();
+    private readonly Button _wifiButton = new() { Text = "Wi-Fi helper", AutoSize = true };
     private readonly Label _status = new() { Text = "Stopped", AutoSize = true, ForeColor = Color.Firebrick };
     private readonly ListBox _events = new() { Dock = DockStyle.Fill, HorizontalScrollbar = true };
 
@@ -64,6 +65,7 @@ internal sealed class MainForm : Form
         toolbar.Controls.Add(_stop);
         toolbar.Controls.Add(_cdnRulesButton);
         toolbar.Controls.Add(_offlineUrlsButton);
+        toolbar.Controls.Add(_wifiButton);
         toolbar.Controls.Add(_status);
         _status.Margin = new Padding(12, 8, 0, 0);
         root.Controls.Add(toolbar, 0, 1);
@@ -85,6 +87,11 @@ internal sealed class MainForm : Form
         _offlineUrlsButton.Click += (_, _) =>
         {
             using var dialog = new OfflineUrlsForm(_offlineUrlStore);
+            dialog.ShowDialog(this);
+        };
+        _wifiButton.Click += (_, _) =>
+        {
+            using var dialog = new WifiHelperForm();
             dialog.ShowDialog(this);
         };
         _proxy.Log += AddLog;
