@@ -79,7 +79,7 @@ certificate interception.
 
 ## Offline URL mappings
 
-Open **Offline URLs** from the main window. The rules are stored at:
+Open **Offline URLs** from the main window. The manager supports JSON import/export and importing the original legacy `DataHistory.xml` file. Legacy records marked as offline are converted to source/target mappings; disabled, duplicate, malformed and HTTPS records are skipped because this modern proxy only rewrites cleartext HTTP requests. The rules are stored at:
 
 `%LOCALAPPDATA%\\PSXDownloadHelper\\offline-urls.json`
 
