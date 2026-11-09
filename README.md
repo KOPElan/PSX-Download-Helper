@@ -59,3 +59,15 @@ PSX Download Helper 是一个基于 **.NET Framework 4.0** 的 Windows 桌面工
 - **نسخه مدرن (.NET 10):** برنامه مستقل ویندوزی در پوشه [Modern](Modern/README.md)، با Solution و فرایند Build جداگانه.
 
 نسخه مدرن هنوز در حال انتقال قابلیت‌هاست؛ وضعیت واقعی هر قابلیت و نقشه راه در README همان نسخه ثبت می‌شود. هیچ‌یک از قابلیت‌های منتقل‌نشده به‌عنوان کامل معرفی نمی‌شوند.
+
+
+## Modern edition
+
+An independent .NET 10 Windows Forms modernization is being developed in
+`Modern/`, while the original .NET Framework 4.0 solution remains preserved.
+
+The modern branch currently includes an asynchronous HTTP proxy, opaque HTTPS
+CONNECT tunnelling, local URL-to-file mappings with byte-range support, CDN
+rewrite rules, and an Offline URL Manager with legacy `DataHistory.xml`
+import. See [Modern/README.md](Modern/README.md) for setup, configuration,
+protocol limitations and build instructions.
