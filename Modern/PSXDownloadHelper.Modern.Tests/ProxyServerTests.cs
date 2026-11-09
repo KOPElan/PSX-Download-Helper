@@ -40,8 +40,8 @@ public sealed class ProxyServerTests
             using var client = new TcpClient();
             await client.ConnectAsync(IPAddress.Loopback, proxyPort);
             var request = Encoding.ASCII.GetBytes(
-                "GET http://127.0.0.1:1/unavailable HTTP/1.1\\r\\n" +
-                "Host: 127.0.0.1:1\\r\\nConnection: close\\r\\n\\r\\n");
+                "GET http://127.0.0.1:1/unavailable HTTP/1.1\r\n" +
+                "Host: 127.0.0.1:1\r\nConnection: close\r\n\r\n");
             await client.GetStream().WriteAsync(request);
 
             var response = await ReadToEndAsync(client.GetStream()).WaitAsync(TimeSpan.FromSeconds(3));
