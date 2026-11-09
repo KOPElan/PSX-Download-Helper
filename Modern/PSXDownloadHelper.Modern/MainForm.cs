@@ -14,6 +14,8 @@ internal sealed class MainForm : Form
     private readonly Button _stop = new() { Text = "Stop", AutoSize = true, Enabled = false };
     private readonly Button _cdnRulesButton = new() { Text = "CDN rules", AutoSize = true };
     private readonly CdnRuleStore _cdnRuleStore = new();
+    private readonly Button _offlineUrlsButton = new() { Text = "Offline URLs", AutoSize = true };
+    private readonly OfflineUrlStore _offlineUrlStore = new();
     private readonly Label _status = new() { Text = "Stopped", AutoSize = true, ForeColor = Color.Firebrick };
     private readonly ListBox _events = new() { Dock = DockStyle.Fill, HorizontalScrollbar = true };
 
@@ -61,6 +63,7 @@ internal sealed class MainForm : Form
         toolbar.Controls.Add(_start);
         toolbar.Controls.Add(_stop);
         toolbar.Controls.Add(_cdnRulesButton);
+        toolbar.Controls.Add(_offlineUrlsButton);
         toolbar.Controls.Add(_status);
         _status.Margin = new Padding(12, 8, 0, 0);
         root.Controls.Add(toolbar, 0, 1);
@@ -79,12 +82,18 @@ internal sealed class MainForm : Form
             using var dialog = new CdnRulesForm(_cdnRuleStore);
             dialog.ShowDialog(this);
         };
+        _offlineUrlsButton.Click += (_, _) =>
+        {
+            using var dialog = new OfflineUrlsForm(_offlineUrlStore);
+            dialog.ShowDialog(this);
+        };
         _proxy.Log += AddLog;
         FormClosed += (_, _) => _ = _proxy.StopAsync();
 
         AddLog("Ready. The default address is loopback-only.");
         AddLog($"Local URL mappings: {_proxy.LocalMappingsPath}");
         AddLog($"CDN rules: {_cdnRuleStore.ConfigPath}");
+        AddLog($"Offline URL mappings: {_offlineUrlStore.ConfigPath}");
         AddLog("HTTPS uses CONNECT tunnelling; encrypted payloads are not inspected.");
     }
 
