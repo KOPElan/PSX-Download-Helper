@@ -21,7 +21,9 @@ internal sealed class ProxyServer
 
     public event Action<string>? Log;
 
-    public bool IsRunning => _listener is not null;\n\n    public string LocalMappingsPath => _localFileMap.ConfigPath;
+    public bool IsRunning => _listener is not null;
+
+    public string LocalMappingsPath => _localFileMap.ConfigPath;
 
     public Task StartAsync(IPAddress address, int port)
     {
@@ -156,7 +158,7 @@ internal sealed class ProxyServer
                 if (GetHeaderValue(headerText, "Expect")?.Equals("100-continue", StringComparison.OrdinalIgnoreCase) == true &&
                     requestBodyLength > 0)
                 {
-                    await clientStream.WriteAsync(Encoding.ASCII.GetBytes("HTTP/1.1 100 Continue\\r\\n\\r\\n"), linked.Token).ConfigureAwait(false);
+                    await clientStream.WriteAsync(Encoding.ASCII.GetBytes("HTTP/1.1 100 Continue\r\n\r\n"), linked.Token).ConfigureAwait(false);
                 }
 
                 if (requestBodyLength > 0)
@@ -203,7 +205,7 @@ internal sealed class ProxyServer
 
     private static string? GetHeaderValue(string rawHeader, string name)
     {
-        foreach (var line in rawHeader.Split("\\r\\n", StringSplitOptions.RemoveEmptyEntries).Skip(1))
+        foreach (var line in rawHeader.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Skip(1))
         {
             var separator = line.IndexOf(':');
             if (separator > 0 && line[..separator].Trim().Equals(name, StringComparison.OrdinalIgnoreCase))
