@@ -70,7 +70,7 @@ internal sealed class LocalFileMap
             if (!satisfiable)
             {
                 var invalid = Encoding.ASCII.GetBytes(
-                    $"HTTP/1.1 416 Range Not Satisfiable\\r\\nAccept-Ranges: bytes\\r\\nContent-Range: bytes */{length}\\r\\nContent-Length: 0\\r\\nConnection: close\\r\\n\\r\\n");
+                    $"HTTP/1.1 416 Range Not Satisfiable\r\nAccept-Ranges: bytes\r\nContent-Range: bytes */{length}\r\nContent-Length: 0\r\nConnection: close\r\n\r\n");
                 await client.WriteAsync(invalid, cancellationToken);
                 _log($"LOCAL 416 {target.PathAndQuery}");
                 return true;
