@@ -65,7 +65,7 @@ public sealed class ProxyServerTests
         using var upstream = new TcpListener(IPAddress.Loopback, 0);
         upstream.Start();
         var upstreamPort = ((IPEndPoint)upstream.LocalEndpoint).Port;
-        var body = "4;source=test\\r\\nWiki\\r\\n5\\r\\npedia\\r\\n0\\r\\nX-Checksum: demo\\r\\n\\r\\n";
+        var body = "4;source=test\r\nWiki\r\n5\r\npedia\r\n0\r\nX-Checksum: demo\r\n\r\n";
         var bodyBytes = Encoding.ASCII.GetBytes(body);
         var upstreamTask = Task.Run(async () =>
         {
@@ -75,7 +75,7 @@ public sealed class ProxyServerTests
             var receivedBody = new byte[bodyBytes.Length];
             await stream.ReadExactlyAsync(receivedBody);
             await stream.WriteAsync(Encoding.ASCII.GetBytes(
-                "HTTP/1.1 200 OK\\r\\nContent-Length: 2\\r\\nConnection: close\\r\\n\\r\\nOK"));
+                "HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nOK"));
             return (header, receivedBody);
         });
 
@@ -88,7 +88,7 @@ public sealed class ProxyServerTests
             await client.ConnectAsync(IPAddress.Loopback, proxyPort);
             var stream = client.GetStream();
             var header = Encoding.ASCII.GetBytes(
-                $"POST http://127.0.0.1:{upstreamPort}/upload HTTP/1.1\\r\\nHost: 127.0.0.1:{upstreamPort}\\r\\nTransfer-Encoding: chunked\\r\\nConnection: close\\r\\n\\r\\n");
+                $"POST http://127.0.0.1:{upstreamPort}/upload HTTP/1.1\r\nHost: 127.0.0.1:{upstreamPort}\r\nTransfer-Encoding: chunked\r\nConnection: close\r\n\r\n");
             await stream.WriteAsync(header);
             await stream.WriteAsync(bodyBytes);
 
@@ -117,7 +117,7 @@ public sealed class ProxyServerTests
             await client.ConnectAsync(IPAddress.Loopback, proxyPort);
             var stream = client.GetStream();
             var request = Encoding.ASCII.GetBytes(
-                "POST http://127.0.0.1:1/upload HTTP/1.1\\r\\nHost: 127.0.0.1\\r\\nContent-Length: 4\\r\\nTransfer-Encoding: chunked\\r\\nConnection: close\\r\\n\\r\\n");
+                "POST http://127.0.0.1:1/upload HTTP/1.1\r\nHost: 127.0.0.1\r\nContent-Length: 4\r\nTransfer-Encoding: chunked\r\nConnection: close\r\n\r\n");
             await stream.WriteAsync(request);
             var response = await ReadToEndAsync(stream);
 
