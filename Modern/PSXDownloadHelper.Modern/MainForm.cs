@@ -74,7 +74,8 @@ internal sealed class MainForm : Form
         _proxy.Log += AddLog;
         FormClosed += (_, _) => _ = _proxy.StopAsync();
 
-        AddLog("Ready. The default address is loopback-only.");\n        AddLog($"Local URL mappings: {_proxy.LocalMappingsPath}");
+        AddLog("Ready. The default address is loopback-only.");
+        AddLog($"Local URL mappings: {_proxy.LocalMappingsPath}");
         AddLog("HTTPS uses CONNECT tunnelling; encrypted payloads are not inspected.");
     }
 
