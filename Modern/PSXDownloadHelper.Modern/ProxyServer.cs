@@ -14,6 +14,7 @@ internal sealed class ProxyServer
     private const int MaxHeaderBytes = 64 * 1024;
     private readonly ConcurrentDictionary<int, TcpClient> _clients = new();
     private readonly LocalFileMap _localFileMap;
+    private readonly CdnRuleStore _cdnRules = new();
     private TcpListener? _listener;
     private CancellationTokenSource? _shutdown;
     private Task? _acceptLoop;
@@ -133,6 +134,11 @@ internal sealed class ProxyServer
 
                 if (await _localFileMap.TryServeAsync(target, parts[0], headerText, clientStream, linked.Token).ConfigureAwait(false))
                     return;
+
+                var originalTarget = target;
+                target = _cdnRules.Rewrite(target, out var matchedRule);
+                if (matchedRule is not null)
+                    Log?.Invoke($"CDN rule '{matchedRule}': {originalTarget.Host}{originalTarget.AbsolutePath} -> {target.Host}{target.AbsolutePath}");
 
                 var transferEncoding = GetHeaderValue(headerText, "Transfer-Encoding");
                 if (!string.IsNullOrWhiteSpace(transferEncoding) &&
@@ -261,6 +267,11 @@ internal sealed class ProxyServer
                 name.Equals("Proxy-Authorization", StringComparison.OrdinalIgnoreCase) ||
                 name.Equals("Connection", StringComparison.OrdinalIgnoreCase))
                 continue;
+            if (name.Equals("Host", StringComparison.OrdinalIgnoreCase))
+            {
+                builder.Append("Host: ").Append(target.Authority).Append("\r\n");
+                continue;
+            }
             builder.Append(line).Append("\r\n");
         }
 
