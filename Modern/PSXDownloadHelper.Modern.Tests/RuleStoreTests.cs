@@ -128,20 +128,39 @@ public sealed class RuleStoreTests
     [Theory]
     [InlineData("mirror.example.test\r\nX-Injected: yes", "")]
     [InlineData("", "session=abc\r\nX-Injected: yes")]
-    [InlineData("", "")]
-    public void OfflineUrlRuleRejectsHeaderInjectionAndHttps(
+    public void OfflineUrlRuleRejectsHeaderInjection(
         string hostHeader, string cookie)
     {
         var rule = new OfflineUrlRule
         {
             Name = "Unsafe rule",
-            SourceUrl = "https://downloads.example.test/file.pkg",
+            SourceUrl = "http://downloads.example.test/file.pkg",
             TargetUrl = "http://mirror.example.test/file.pkg",
             HostHeader = hostHeader,
             Cookie = cookie
         };
 
         Assert.Throws<InvalidDataException>(() => rule.NormalizeAndValidate());
+    }
+
+    [Fact]
+    public void OfflineUrlRuleRejectsHttpsSourceAndTarget()
+    {
+        var sourceHttps = new OfflineUrlRule
+        {
+            Name = "HTTPS source",
+            SourceUrl = "https://downloads.example.test/file.pkg",
+            TargetUrl = "http://mirror.example.test/file.pkg"
+        };
+        var targetHttps = new OfflineUrlRule
+        {
+            Name = "HTTPS target",
+            SourceUrl = "http://downloads.example.test/file.pkg",
+            TargetUrl = "https://mirror.example.test/file.pkg"
+        };
+
+        Assert.Throws<InvalidDataException>(() => sourceHttps.NormalizeAndValidate());
+        Assert.Throws<InvalidDataException>(() => targetHttps.NormalizeAndValidate());
     }
 
     private sealed class TemporaryDirectory : IDisposable
