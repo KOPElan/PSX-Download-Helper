@@ -123,7 +123,7 @@ The .NET 10 solution built successfully on GitHub Actions in run [#42668994505](
 3. CDN host/path rules with deterministic matching, validation and import/export.
 4. Offline URL rule migration and settings persistence.
 5. Wi-Fi Hosted Network compatibility helper with explicit Windows capability checks (implemented; hardware/OS runtime validation pending).
-6. Legacy settings migration, automated unit/integration tests and signed release packaging.
+6. Legacy settings migration, automated unit/integration tests and release packaging (code signing and device validation remain pending).
 
 ## License
 
@@ -136,3 +136,45 @@ This derivative follows the repository's GPL-3.0 license. See the root
 The main window can import the legacy `app.config` / user-settings XML through **Import legacy settings**. The importer reads the legacy proxy listen address and port (falling back to loopback and port 8080 when invalid), and preserves language, theme and selected feature flags in `%LOCALAPPDATA%\\PSXDownloadHelper\\settings.json`. Cookie values and the legacy Wi-Fi access-point password are intentionally excluded; they are credentials and are not migrated. The importer does not automatically enable legacy CDN/offline behavior: existing CDN and Offline URL managers remain independently controlled.
 
 The import action is explicit and does not overwrite the source XML. Review the imported address before starting the proxy; non-loopback listeners can expose the proxy to other devices on the network.
+
+
+## Windows release package
+
+The `.github/workflows/modern-release.yml` workflow builds and tests the
+modern solution, then publishes a **self-contained Windows x64** package.
+The package includes the application, this guide, and the GPL-3.0 license;
+end users do not need to install the .NET Desktop Runtime separately.
+
+- Run the workflow manually from **Actions → Modern .NET release → Run workflow**
+  to build a validation package without publishing a GitHub Release.
+- Download the `modern-windows-x64-package` workflow artifact after the run.
+- To publish a versioned GitHub Release, push a tag such as
+  `modern-v2.5.0`. The release job runs only after build and integration tests
+  pass, and attaches the ZIP plus `SHA256SUMS.txt`.
+- Verify the downloaded archive with the SHA-256 value in `SHA256SUMS.txt`.
+
+The package is currently **unsigned**. Windows SmartScreen may show a warning;
+a trusted code-signing certificate and protected signing workflow have not
+been configured. Do not treat the absence of a warning as proof of publisher
+identity.
+
+## Pre-release device validation
+
+CI verifies compilation, automated integration tests, and package creation.
+It cannot validate a real console, Wi-Fi adapter, Windows Firewall policy, or
+all Windows 10/11 hardware combinations. Before calling a build production
+ready, test on a clean Windows 10 and Windows 11 x64 machine and record:
+
+1. First launch, settings creation, and clean shutdown.
+2. HTTP proxy forwarding and HTTPS CONNECT tunnelling with TLS verification
+   left enabled.
+3. Local file GET/HEAD and valid, invalid, and unsatisfiable byte ranges.
+4. CDN and Offline URL rule ordering, import/export, and legacy XML import.
+5. Proxy stop/restart, client disconnects, upstream timeouts, and unavailable
+   upstream hosts.
+6. Loopback default, explicit LAN binding, and Windows Firewall behavior on a
+   trusted Private network.
+7. Wi-Fi Helper capability detection on supported and unsupported adapters.
+
+Do not expose the proxy on a public or untrusted network. Hosted Network is
+deprecated by Windows and its availability depends on the adapter and driver.
