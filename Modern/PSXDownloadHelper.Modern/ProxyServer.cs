@@ -136,6 +136,32 @@ internal sealed class ProxyServer
                     return;
                 }
 
+                var transferEncodingValues = GetHeaderValues(headerText, "Transfer-Encoding");
+                var contentLengthValues = GetHeaderValues(headerText, "Content-Length");
+                var isChunked = false;
+                if (transferEncodingValues.Count > 0)
+                {
+                    if (transferEncodingValues.Count != 1 || contentLengthValues.Count > 0)
+                    {
+                        await WriteErrorAsync(clientStream, 400, "Invalid request framing", linked.Token).ConfigureAwait(false);
+                        return;
+                    }
+
+                    if (!transferEncodingValues[0].Equals("chunked", StringComparison.OrdinalIgnoreCase))
+                    {
+                        await WriteErrorAsync(clientStream, 501, "Unsupported Transfer-Encoding", linked.Token).ConfigureAwait(false);
+                        return;
+                    }
+
+                    isChunked = true;
+                }
+
+                if (!TryGetContentLength(headerText, out var requestBodyLength))
+                {
+                    await WriteErrorAsync(clientStream, 400, "Invalid Content-Length", linked.Token).ConfigureAwait(false);
+                    return;
+                }
+
                 if (await _localFileMap.TryServeAsync(target, parts[0], headerText, clientStream, linked.Token).ConfigureAwait(false))
                     return;
 
@@ -154,19 +180,6 @@ internal sealed class ProxyServer
                 if (matchedRule is not null)
                     Log?.Invoke($"CDN rule '{matchedRule}': {beforeCdnTarget.Host}{beforeCdnTarget.AbsolutePath} -> {target.Host}{target.AbsolutePath}");
 
-                var transferEncoding = GetHeaderValue(headerText, "Transfer-Encoding");
-                if (!string.IsNullOrWhiteSpace(transferEncoding))
-                {
-                    await WriteErrorAsync(clientStream, 501, "Transfer-Encoding request bodies are not supported", linked.Token).ConfigureAwait(false);
-                    return;
-                }
-
-                if (!TryGetContentLength(headerText, out var requestBodyLength))
-                {
-                    await WriteErrorAsync(clientStream, 400, "Invalid Content-Length", linked.Token).ConfigureAwait(false);
-                    return;
-                }
-
                 Log?.Invoke($"HTTP {target.Host}:{target.Port} {target.PathAndQuery}");
                 using var upstream = new TcpClient();
                 await upstream.ConnectAsync(target.Host, target.Port, linked.Token).ConfigureAwait(false);
@@ -177,12 +190,14 @@ internal sealed class ProxyServer
                 await upstreamStream.WriteAsync(bytes, linked.Token).ConfigureAwait(false);
 
                 if (GetHeaderValue(headerText, "Expect")?.Equals("100-continue", StringComparison.OrdinalIgnoreCase) == true &&
-                    requestBodyLength > 0)
+                    (isChunked || requestBodyLength > 0))
                 {
                     await clientStream.WriteAsync(Encoding.ASCII.GetBytes("HTTP/1.1 100 Continue\r\n\r\n"), linked.Token).ConfigureAwait(false);
                 }
 
-                if (requestBodyLength > 0)
+                if (isChunked)
+                    await CopyChunkedBodyAsync(clientStream, upstreamStream, linked.Token).ConfigureAwait(false);
+                else if (requestBodyLength > 0)
                     await CopyExactlyAsync(clientStream, upstreamStream, requestBodyLength, linked.Token).ConfigureAwait(false);
 
                 await upstreamStream.CopyToAsync(clientStream, linked.Token).ConfigureAwait(false);
@@ -235,6 +250,20 @@ internal sealed class ProxyServer
         return null;
     }
 
+    private static List<string> GetHeaderValues(string rawHeader, string name) =>
+        rawHeader.Split("\r\n", StringSplitOptions.RemoveEmptyEntries)
+            .Skip(1)
+            .Select(line =>
+            {
+                var separator = line.IndexOf(':');
+                return separator > 0 && line[..separator].Trim().Equals(name, StringComparison.OrdinalIgnoreCase)
+                    ? line[(separator + 1)..].Trim()
+                    : null;
+            })
+            .Where(value => value is not null)
+            .Cast<string>()
+            .ToList();
+
     private static bool TryGetContentLength(string rawHeader, out long length)
     {
         var values = rawHeader.Split("\r\n", StringSplitOptions.RemoveEmptyEntries)
@@ -263,6 +292,89 @@ internal sealed class ProxyServer
         }
 
         return long.TryParse(values[0], out length) && length >= 0;
+    }
+
+    private static async Task CopyChunkedBodyAsync(Stream source, Stream destination, CancellationToken token)
+    {
+        const int maxLineBytes = 8192;
+        const int maxTrailerBytes = 64 * 1024;
+
+        while (true)
+        {
+            var sizeLine = await ReadCrlfLineAsync(source, maxLineBytes, token).ConfigureAwait(false);
+            if (sizeLine.Length == 0 || sizeLine.Any(c => c < 0x20 && c != '\t' || c > 0x7e))
+                throw new InvalidDataException("Invalid chunk-size line.");
+
+            var sizeToken = sizeLine.Split(';', 2)[0].Trim();
+            if (sizeToken.Length == 0 || sizeToken.Length > 16 ||
+                !long.TryParse(sizeToken, System.Globalization.NumberStyles.HexNumber,
+                    System.Globalization.CultureInfo.InvariantCulture, out var chunkSize) || chunkSize < 0)
+                throw new InvalidDataException("Invalid chunk size.");
+
+            await destination.WriteAsync(Encoding.ASCII.GetBytes(sizeLine + "\r\n"), token).ConfigureAwait(false);
+
+            if (chunkSize == 0)
+            {
+                var trailerBytes = 0;
+                while (true)
+                {
+                    var trailer = await ReadCrlfLineAsync(source, maxLineBytes, token).ConfigureAwait(false);
+                    trailerBytes += Encoding.ASCII.GetByteCount(trailer) + 2;
+                    if (trailerBytes > maxTrailerBytes)
+                        throw new InvalidDataException("Chunk trailers exceed 64 KiB.");
+
+                    if (trailer.Length > 0)
+                    {
+                        var separator = trailer.IndexOf(':');
+                        if (separator <= 0 || char.IsWhiteSpace(trailer[0]))
+                            throw new InvalidDataException("Invalid chunk trailer.");
+                        var name = trailer[..separator].Trim();
+                        if (name.Equals("Content-Length", StringComparison.OrdinalIgnoreCase) ||
+                            name.Equals("Transfer-Encoding", StringComparison.OrdinalIgnoreCase) ||
+                            name.Equals("Host", StringComparison.OrdinalIgnoreCase))
+                            throw new InvalidDataException("Forbidden framing or routing field in chunk trailers.");
+                    }
+
+                    await destination.WriteAsync(Encoding.ASCII.GetBytes(trailer + "\r\n"), token).ConfigureAwait(false);
+                    if (trailer.Length == 0)
+                        return;
+                }
+            }
+
+            await CopyExactlyAsync(source, destination, chunkSize, token).ConfigureAwait(false);
+            var terminator = new byte[2];
+            await source.ReadExactlyAsync(terminator, token).ConfigureAwait(false);
+            if (terminator[0] != 13 || terminator[1] != 10)
+                throw new InvalidDataException("Chunk data must be followed by CRLF.");
+            await destination.WriteAsync(terminator, token).ConfigureAwait(false);
+        }
+    }
+
+    private static async Task<string> ReadCrlfLineAsync(Stream source, int maxBytes, CancellationToken token)
+    {
+        using var line = new MemoryStream();
+        var one = new byte[1];
+        var previousWasCr = false;
+        while (line.Length <= maxBytes)
+        {
+            var read = await source.ReadAsync(one, token).ConfigureAwait(false);
+            if (read == 0)
+                throw new EndOfStreamException("Unexpected end of chunked request body.");
+
+            var value = one[0];
+            if (previousWasCr)
+            {
+                if (value != 10)
+                    throw new InvalidDataException("Chunked body lines must use CRLF.");
+                var bytes = line.ToArray();
+                return Encoding.ASCII.GetString(bytes, 0, bytes.Length - 1);
+            }
+
+            line.WriteByte(value);
+            previousWasCr = value == 13;
+        }
+
+        throw new InvalidDataException("Chunked body line exceeds the configured limit.");
     }
 
     private static async Task CopyExactlyAsync(Stream source, Stream destination, long bytesToCopy, CancellationToken token)

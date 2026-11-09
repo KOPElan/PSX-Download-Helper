@@ -51,7 +51,77 @@ public sealed class ProxyServerTests
             await stream.WriteAsync(request);
             var response = await ReadToEndAsync(stream);
 
-            Assert.Contains("HTTP/1.1 501 Transfer-Encoding request bodies are not supported", response, StringComparison.Ordinal);
+            Assert.Contains("HTTP/1.1 501 Unsupported Transfer-Encoding", response, StringComparison.Ordinal);
+        }
+        finally
+        {
+            await proxy.StopAsync();
+        }
+    }
+
+    [Fact]
+    public async Task ForwardsChunkedRequestBodyAndTrailers()
+    {
+        using var upstream = new TcpListener(IPAddress.Loopback, 0);
+        upstream.Start();
+        var upstreamPort = ((IPEndPoint)upstream.LocalEndpoint).Port;
+        var body = "4;source=test\r\nWiki\r\n5\r\npedia\r\n0\r\nX-Checksum: demo\r\n\r\n";
+        var bodyBytes = Encoding.ASCII.GetBytes(body);
+        var upstreamTask = Task.Run(async () =>
+        {
+            using var accepted = await upstream.AcceptTcpClientAsync();
+            var stream = accepted.GetStream();
+            var header = Encoding.ASCII.GetString(await ReadHeaderAsync(stream));
+            var receivedBody = new byte[bodyBytes.Length];
+            await stream.ReadExactlyAsync(receivedBody);
+            await stream.WriteAsync(Encoding.ASCII.GetBytes(
+                "HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nOK"));
+            return (header, receivedBody);
+        });
+
+        var proxy = new ProxyServer();
+        var proxyPort = GetFreePort();
+        await proxy.StartAsync(IPAddress.Loopback, proxyPort);
+        try
+        {
+            using var client = new TcpClient();
+            await client.ConnectAsync(IPAddress.Loopback, proxyPort);
+            var stream = client.GetStream();
+            var header = Encoding.ASCII.GetBytes(
+                $"POST http://127.0.0.1:{upstreamPort}/upload HTTP/1.1\r\nHost: 127.0.0.1:{upstreamPort}\r\nTransfer-Encoding: chunked\r\nConnection: close\r\n\r\n");
+            await stream.WriteAsync(header);
+            await stream.WriteAsync(bodyBytes);
+
+            var response = await ReadToEndAsync(stream);
+            var forwarded = await upstreamTask.WaitAsync(TimeSpan.FromSeconds(5));
+
+            Assert.Contains("HTTP/1.1 200 OK", response, StringComparison.Ordinal);
+            Assert.Contains("Transfer-Encoding: chunked", forwarded.header, StringComparison.OrdinalIgnoreCase);
+            Assert.Equal(body, Encoding.ASCII.GetString(forwarded.receivedBody));
+        }
+        finally
+        {
+            await proxy.StopAsync();
+        }
+    }
+
+    [Fact]
+    public async Task RejectsContentLengthCombinedWithTransferEncoding()
+    {
+        var proxy = new ProxyServer();
+        var proxyPort = GetFreePort();
+        await proxy.StartAsync(IPAddress.Loopback, proxyPort);
+        try
+        {
+            using var client = new TcpClient();
+            await client.ConnectAsync(IPAddress.Loopback, proxyPort);
+            var stream = client.GetStream();
+            var request = Encoding.ASCII.GetBytes(
+                "POST http://127.0.0.1:1/upload HTTP/1.1\r\nHost: 127.0.0.1\r\nContent-Length: 4\r\nTransfer-Encoding: chunked\r\nConnection: close\r\n\r\n");
+            await stream.WriteAsync(request);
+            var response = await ReadToEndAsync(stream);
+
+            Assert.Contains("HTTP/1.1 400 Invalid request framing", response, StringComparison.Ordinal);
         }
         finally
         {
