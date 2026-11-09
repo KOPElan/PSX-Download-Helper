@@ -12,6 +12,8 @@ namespace PSXDownloadHelper.Modern;
 internal sealed class ProxyServer
 {
     private const int MaxHeaderBytes = 64 * 1024;
+    private readonly TimeSpan _headerTimeout;
+    private readonly TimeSpan _upstreamConnectTimeout;
     private readonly ConcurrentDictionary<int, TcpClient> _clients = new();
     private readonly LocalFileMap _localFileMap;
     private readonly CdnRuleStore _cdnRules = new();
@@ -23,8 +25,20 @@ internal sealed class ProxyServer
 
     public event Action<string>? Log;
 
-    public ProxyServer(string? localMappingsPath = null) =>
+    public ProxyServer(
+        string? localMappingsPath = null,
+        TimeSpan? headerTimeout = null,
+        TimeSpan? upstreamConnectTimeout = null)
+    {
         _localFileMap = new LocalFileMap(message => Log?.Invoke(message), localMappingsPath);
+        _headerTimeout = headerTimeout ?? TimeSpan.FromSeconds(30);
+        _upstreamConnectTimeout = upstreamConnectTimeout ?? TimeSpan.FromSeconds(15);
+
+        if (_headerTimeout <= TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(headerTimeout));
+        if (_upstreamConnectTimeout <= TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(upstreamConnectTimeout));
+    }
 
     public bool IsRunning => _listener is not null;
 
@@ -110,7 +124,20 @@ internal sealed class ProxyServer
             {
                 using var linked = CancellationTokenSource.CreateLinkedTokenSource(serverToken);
                 var clientStream = client.GetStream();
-                var headerBytes = await ReadHeaderAsync(clientStream, linked.Token).ConfigureAwait(false);
+                byte[] headerBytes;
+                using (var headerTimeout = CancellationTokenSource.CreateLinkedTokenSource(linked.Token))
+                {
+                    headerTimeout.CancelAfter(_headerTimeout);
+                    try
+                    {
+                        headerBytes = await ReadHeaderAsync(clientStream, headerTimeout.Token).ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException) when (!linked.IsCancellationRequested)
+                    {
+                        await WriteErrorAsync(clientStream, 408, "Request Header Timeout", linked.Token).ConfigureAwait(false);
+                        return;
+                    }
+                }
                 if (headerBytes.Length == 0)
                     return;
 
@@ -182,7 +209,26 @@ internal sealed class ProxyServer
 
                 Log?.Invoke($"HTTP {target.Host}:{target.Port} {target.PathAndQuery}");
                 using var upstream = new TcpClient();
-                await upstream.ConnectAsync(target.Host, target.Port, linked.Token).ConfigureAwait(false);
+                using (var connectTimeout = CancellationTokenSource.CreateLinkedTokenSource(linked.Token))
+                {
+                    connectTimeout.CancelAfter(_upstreamConnectTimeout);
+                    try
+                    {
+                        await upstream.ConnectAsync(target.Host, target.Port, connectTimeout.Token).ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException) when (!linked.IsCancellationRequested)
+                    {
+                        Log?.Invoke($"Upstream connection timed out: {target.Host}:{target.Port}");
+                        await WriteErrorAsync(clientStream, 504, "Gateway Timeout", linked.Token).ConfigureAwait(false);
+                        return;
+                    }
+                    catch (SocketException ex)
+                    {
+                        Log?.Invoke($"Upstream connection failed: {target.Host}:{target.Port}: {ex.Message}");
+                        await WriteErrorAsync(clientStream, 502, "Bad Gateway", linked.Token).ConfigureAwait(false);
+                        return;
+                    }
+                }
                 var upstreamStream = upstream.GetStream();
 
                 var rewrittenHeader = RewriteRequestHeader(headerText, target, parts[0], parts[2], offlineHostHeader, offlineCookie);
