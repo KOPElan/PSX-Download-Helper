@@ -4,13 +4,17 @@ namespace PSXDownloadHelper.Modern;
 
 internal sealed class OfflineUrlStore
 {
-    private readonly string _path = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "PSXDownloadHelper", "offline-urls.json");
+    private readonly string _path;
 
     public string ConfigPath => _path;
 
-    public OfflineUrlStore() => EnsureConfig();
+    public OfflineUrlStore(string? configPath = null)
+    {
+        _path = configPath ?? Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "PSXDownloadHelper", "offline-urls.json");
+        EnsureConfig();
+    }
 
     public List<OfflineUrlRule> Load()
     {
