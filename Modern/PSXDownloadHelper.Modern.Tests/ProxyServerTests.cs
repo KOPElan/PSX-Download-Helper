@@ -27,11 +27,12 @@ public sealed class ProxyServerTests
         });
 
         var proxy = new ProxyServer();
-        await proxy.StartAsync(IPAddress.Loopback, GetFreePort());
+        var proxyPort = GetFreePort();
+        await proxy.StartAsync(IPAddress.Loopback, proxyPort);
         try
         {
             using var client = new TcpClient();
-            await client.ConnectAsync(IPAddress.Loopback, GetProxyPort(proxy));
+            await client.ConnectAsync(IPAddress.Loopback, proxyPort);
             var stream = client.GetStream();
             var request = Encoding.ASCII.GetBytes(
                 $"CONNECT 127.0.0.1:{upstreamPort} HTTP/1.1\r\nHost: 127.0.0.1:{upstreamPort}\r\n\r\n");
