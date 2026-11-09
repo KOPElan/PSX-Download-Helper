@@ -4,7 +4,7 @@ A separate modernization track for the original PSX Download Helper. The
 original .NET Framework 4.0 solution remains under `PSXDownloadHelper/` and
 is not modified by this edition.
 
-## Current status — 2.3.0
+## Current status — 2.4.0
 
 - New Windows Forms application targeting .NET 10.
 - Async local TCP proxy listener.
@@ -15,7 +15,7 @@ is not modified by this edition.
 - Configurable CDN host/path rewrite rules with priority ordering, validation, and JSON import/export.
 - Offline URL Manager with exact URL-to-mirror mappings, optional Host/Cookie overrides, priorities and JSON import/export.
 
-The modern edition is an incremental port. Wi-Fi helper functions and broader settings migration remain tracked for subsequent milestones.
+The modern edition is an incremental port. A Wi-Fi Helper now exposes the legacy Windows Hosted Network configure/start/stop commands and checks driver capability via `netsh wlan show drivers`. It uses direct process argument passing (no shell command concatenation), validates SSID/password input, and does not persist the Wi-Fi password. Hosted Network is deprecated and may be unavailable with current Windows versions or drivers; this is not equivalent to the newer Windows Mobile Hotspot feature. Broader legacy settings migration remains outstanding.
 
 ## Requirements
 
@@ -122,8 +122,8 @@ The .NET 10 solution built successfully on GitHub Actions in run [#42668994505](
 2. URL-to-local-file mapping with HTTP Range support and safe path handling.
 3. CDN host/path rules with deterministic matching, validation and import/export.
 4. Offline URL rule migration and settings persistence.
-5. Wi-Fi helper replacement with explicit Windows capability checks.
-6. Automated unit/integration tests and signed release packaging.
+5. Wi-Fi Hosted Network compatibility helper with explicit Windows capability checks (implemented; hardware/OS runtime validation pending).
+6. Legacy settings migration, automated unit/integration tests and signed release packaging.
 
 ## License
 
