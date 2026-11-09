@@ -14,7 +14,11 @@ internal sealed class LocalFileMap
         "PSXDownloadHelper", "local-mappings.json");
     private readonly Action<string> _log;
 
-    public LocalFileMap(Action<string> log) => _log = log;
+    public LocalFileMap(Action<string> log)
+    {
+        _log = log;
+        _ = LoadMappings();
+    }
 
     public string ConfigPath => _configPath;
 
