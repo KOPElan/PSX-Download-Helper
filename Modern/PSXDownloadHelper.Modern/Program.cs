@@ -1,3 +1,4 @@
+using System.Windows.Forms;
 namespace PSXDownloadHelper.Modern;
 
 internal static class Program
