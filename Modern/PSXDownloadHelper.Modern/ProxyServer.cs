@@ -13,13 +13,15 @@ internal sealed class ProxyServer
 {
     private const int MaxHeaderBytes = 64 * 1024;
     private readonly ConcurrentDictionary<int, TcpClient> _clients = new();
-    private readonly LocalFileMap _localFileMap = new(message => Log?.Invoke(message));
+    private readonly LocalFileMap _localFileMap;
     private TcpListener? _listener;
     private CancellationTokenSource? _shutdown;
     private Task? _acceptLoop;
     private int _nextClientId;
 
     public event Action<string>? Log;
+
+    public ProxyServer() => _localFileMap = new LocalFileMap(message => Log?.Invoke(message));
 
     public bool IsRunning => _listener is not null;
 
